@@ -59,11 +59,10 @@ function ContractsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Контракт</TableHead>
-                    <TableHead className="hidden sm:table-cell">Релиз</TableHead>
+                    <TableHead>Версия</TableHead>
                     <TableHead>Статус</TableHead>
-                    <TableHead className="hidden md:table-cell">Подписан</TableHead>
-                    <TableHead className="hidden md:table-cell">Истекает</TableHead>
+                    <TableHead className="hidden md:table-cell">Принят</TableHead>
+                    <TableHead className="hidden md:table-cell">Создан</TableHead>
                     <TableHead className="w-10"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -72,9 +71,8 @@ function ContractsPage() {
                     const config = statusConfig[contract.status];
                     return (
                       <TableRow key={contract.key}>
-                        <TableCell className="text-sm font-medium">{contract.title}</TableCell>
-                        <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
-                          {contract.release_title ?? '--'}
+                        <TableCell className="text-sm font-medium">
+                          {contract.template_version}
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className={config.className}>
@@ -82,14 +80,12 @@ function ContractsPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="hidden text-sm text-muted-foreground md:table-cell">
-                          {contract.signed_at
-                            ? new Date(contract.signed_at).toLocaleDateString('ru-RU')
+                          {contract.accepted_at
+                            ? new Date(contract.accepted_at).toLocaleDateString('ru-RU')
                             : '--'}
                         </TableCell>
                         <TableCell className="hidden text-sm text-muted-foreground md:table-cell">
-                          {contract.expires_at
-                            ? new Date(contract.expires_at).toLocaleDateString('ru-RU')
-                            : '--'}
+                          {new Date(contract.created_at).toLocaleDateString('ru-RU')}
                         </TableCell>
                         <TableCell>
                           {contract.pdf_url && (

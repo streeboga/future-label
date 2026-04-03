@@ -101,11 +101,9 @@ function AdminOrders() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Релиз</TableHead>
-                      <TableHead>Артист</TableHead>
-                      <TableHead>Сервис</TableHead>
-                      <TableHead className="text-right">Сумма</TableHead>
+                      <TableHead>ID</TableHead>
                       <TableHead>Статус</TableHead>
+                      <TableHead className="hidden sm:table-cell">Заметки</TableHead>
                       <TableHead className="hidden sm:table-cell">Дата</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -114,22 +112,16 @@ function AdminOrders() {
                       const config = orderStatusConfig[order.status];
                       return (
                         <TableRow key={order.key}>
-                          <TableCell className="text-sm font-medium">
-                            {order.release_title}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {order.artist_name}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {order.service_title}
-                          </TableCell>
-                          <TableCell className="text-right text-sm font-medium">
-                            {order.amount.toLocaleString('ru-RU')} {order.currency}
+                          <TableCell className="text-sm font-medium font-mono">
+                            {order.key}
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline" className={config.className}>
                               {config.label}
                             </Badge>
+                          </TableCell>
+                          <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
+                            {order.notes ?? '--'}
                           </TableCell>
                           <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
                             {new Date(order.created_at).toLocaleDateString('ru-RU')}

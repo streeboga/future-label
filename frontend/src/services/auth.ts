@@ -1,6 +1,5 @@
 import { api } from '@/lib/api';
 import type {
-  AuthResponse,
   ForgotPasswordRequest,
   JsonApiUser,
   LoginRequest,
@@ -10,8 +9,18 @@ import type {
 } from '@/types/auth';
 
 export async function login(data: LoginRequest): Promise<{ token: string; user: User }> {
-  const response = await api.post<AuthResponse>('/auth/login', data);
-  return response.data.data;
+  const response = await api.post('/auth/login', data);
+  const { id, attributes } = response.data.data;
+  const token = response.data.meta.token;
+  return {
+    token,
+    user: {
+      id,
+      name: attributes.name,
+      email: attributes.email,
+      role: attributes.role,
+    },
+  };
 }
 
 export async function register(data: RegisterRequest): Promise<void> {

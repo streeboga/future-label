@@ -92,7 +92,7 @@ function AdminArtists() {
                     <TableRow>
                       <TableHead>Имя</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead className="text-center">Релизы</TableHead>
+                      <TableHead className="hidden sm:table-cell">Роль</TableHead>
                       <TableHead className="hidden sm:table-cell">Регистрация</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -114,8 +114,8 @@ function AdminArtists() {
                         <TableCell className="text-sm text-muted-foreground">
                           {artist.email}
                         </TableCell>
-                        <TableCell className="text-center text-sm">
-                          {artist.releases_count}
+                        <TableCell className="hidden text-sm text-muted-foreground capitalize sm:table-cell">
+                          {artist.role}
                         </TableCell>
                         <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
                           {new Date(artist.created_at).toLocaleDateString('ru-RU')}
@@ -203,8 +203,8 @@ function ArtistDetailDialog({
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <p className="text-xs text-muted-foreground">Релизов</p>
-                <p className="font-medium">{artist.releases_count}</p>
+                <p className="text-xs text-muted-foreground">Роль</p>
+                <p className="font-medium capitalize">{artist.role}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Регистрация</p>

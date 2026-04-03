@@ -25,8 +25,8 @@ function AdminDashboard() {
     },
     {
       title: 'Выручка',
-      value: metrics?.revenue
-        ? `${metrics.revenue.toLocaleString('ru-RU')} RUB`
+      value: metrics?.total_revenue
+        ? `${Number(metrics.total_revenue).toLocaleString('ru-RU')} RUB`
         : '0 RUB',
       icon: DollarSign,
       color: 'text-violet-600',

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useAdminReleases, useModerateRelease, useExportReleases } from '@/hooks/use-admin';
+import { useAdminReleases, useModerateRelease } from '@/hooks/use-admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { ReleaseStatusBadge } from '@/components/release-status-badge';
-import { Download, CheckCircle2, XCircle, Search, Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Search, Loader2 } from 'lucide-react';
 
 export const Route = createFileRoute('/_admin/admin/releases')({
   component: AdminReleases,
@@ -46,7 +46,6 @@ function AdminReleases() {
   });
 
   const moderateRelease = useModerateRelease();
-  const exportReleases = useExportReleases();
 
   const [moderationModal, setModerationModal] = useState<{
     key: string;
@@ -77,20 +76,6 @@ function AdminReleases() {
           <h1 className="text-xl font-semibold tracking-tight">Управление релизами</h1>
           <p className="text-sm text-muted-foreground">Модерация и управление контентом</p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-1.5"
-          onClick={() => exportReleases.mutate()}
-          disabled={exportReleases.isPending}
-        >
-          {exportReleases.isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          Экспорт
-        </Button>
       </div>
 
       {/* Filters */}

@@ -17,13 +17,6 @@ export function useRelease(key: string) {
   });
 }
 
-export function useReleaseMetrics() {
-  return useQuery({
-    queryKey: ['releases', 'metrics'],
-    queryFn: releasesService.fetchReleaseMetrics,
-  });
-}
-
 export function useReleaseTracks(releaseKey: string) {
   return useQuery({
     queryKey: ['releases', releaseKey, 'tracks'],
@@ -106,13 +99,3 @@ export function useDeleteTrack() {
   });
 }
 
-export function useUploadCover() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ releaseKey, file }: { releaseKey: string; file: File }) =>
-      releasesService.uploadCover(releaseKey, file),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['releases'] });
-    },
-  });
-}

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useReleases, useReleaseMetrics } from '@/hooks/use-releases';
+import { useReleases } from '@/hooks/use-releases';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ReleaseStatusBadge } from '@/components/release-status-badge';
-import { Plus, Disc3, CheckCircle2, Clock, FileEdit } from 'lucide-react';
+import { Plus, Disc3 } from 'lucide-react';
 
 export const Route = createFileRoute('/_authenticated/dashboard/')({
   component: DashboardIndex,
@@ -19,36 +19,8 @@ export const Route = createFileRoute('/_authenticated/dashboard/')({
 
 function DashboardIndex() {
   const { data: releasesData, isLoading: releasesLoading } = useReleases();
-  const { data: metrics, isLoading: metricsLoading } = useReleaseMetrics();
 
   const releases = releasesData?.data ?? [];
-
-  const metricCards = [
-    {
-      title: 'Всего релизов',
-      value: metrics?.total ?? 0,
-      icon: Disc3,
-      color: 'text-foreground',
-    },
-    {
-      title: 'Опубликовано',
-      value: metrics?.published ?? 0,
-      icon: CheckCircle2,
-      color: 'text-blue-600',
-    },
-    {
-      title: 'На проверке',
-      value: metrics?.in_review ?? 0,
-      icon: Clock,
-      color: 'text-amber-600',
-    },
-    {
-      title: 'Черновики',
-      value: metrics?.drafts ?? 0,
-      icon: FileEdit,
-      color: 'text-gray-500',
-    },
-  ];
 
   return (
     <div className="space-y-6">
@@ -68,33 +40,12 @@ function DashboardIndex() {
         </Link>
       </div>
 
-      {/* Metrics */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {metricCards.map((metric) => (
-          <Card key={metric.title} className="gap-3 py-4">
-            <CardHeader className="pb-0">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xs font-medium text-muted-foreground">
-                  {metric.title}
-                </CardTitle>
-                <metric.icon className={`h-4 w-4 ${metric.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              {metricsLoading ? (
-                <div className="h-7 w-12 animate-pulse rounded bg-muted" />
-              ) : (
-                <p className={`text-2xl font-semibold ${metric.color}`}>{metric.value}</p>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
       {/* Release list */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Релизы</CardTitle>
+          <CardTitle className="text-base">
+            Релизы {releasesData?.meta?.total != null && `(${releasesData.meta.total})`}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {releasesLoading ? (

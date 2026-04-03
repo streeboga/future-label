@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreateRelease, useUpdateRelease, useUploadTrack, useUploadCover, useSubmitRelease } from '@/hooks/use-releases';
+import { useCreateRelease, useUpdateRelease, useUploadTrack, useSubmitRelease } from '@/hooks/use-releases';
 import { useServices } from '@/hooks/use-services';
 import type { ReleaseType, Release, Track } from '@/types/release';
 import type { Service } from '@/types/service';
@@ -69,7 +69,6 @@ function ReleaseWizard() {
   const createRelease = useCreateRelease();
   const updateRelease = useUpdateRelease();
   const uploadTrack = useUploadTrack();
-  const uploadCover = useUploadCover();
   const submitRelease = useSubmitRelease();
   const { data: services = [] } = useServices();
 
@@ -132,15 +131,8 @@ function ReleaseWizard() {
     }
   };
 
-  const handleCoverUpload = async (file: File) => {
-    if (!release) return;
+  const handleCoverUpload = (file: File) => {
     setCoverPreview(URL.createObjectURL(file));
-    try {
-      const updated = await uploadCover.mutateAsync({ releaseKey: release.key, file });
-      setRelease(updated);
-    } catch {
-      setCoverPreview(null);
-    }
   };
 
   const handleRemoveTrack = (index: number) => {
@@ -317,10 +309,10 @@ function ReleaseWizard() {
                     </span>
                     <div className="flex-1 overflow-hidden">
                       <p className="truncate text-sm font-medium">
-                        {track.title || track.file_name || `Трек ${index + 1}`}
+                        {track.title || `Трек ${index + 1}`}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {track.file_format?.toUpperCase() ?? '--'} &middot;{' '}
+                        {track.format?.toUpperCase() ?? '--'} &middot;{' '}
                         {formatFileSize(track.file_size)}
                       </p>
                     </div>
@@ -370,7 +362,7 @@ function ReleaseWizard() {
                   className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) void handleCoverUpload(file);
+                    if (file) handleCoverUpload(file);
                   }}
                 />
               </div>
@@ -502,7 +494,7 @@ function ReleaseWizard() {
                   {tracks.map((track, i) => (
                     <div key={track.key} className="flex items-center gap-2 text-sm">
                       <span className="w-5 text-right text-muted-foreground">{i + 1}.</span>
-                      <span>{track.title || track.file_name || `Трек ${i + 1}`}</span>
+                      <span>{track.title || `Трек ${i + 1}`}</span>
                     </div>
                   ))}
                 </div>

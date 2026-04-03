@@ -190,17 +190,17 @@ function ReleaseDetail() {
                   {index > 0 && <Separator />}
                   <div className="flex items-center gap-3 py-2">
                     <span className="w-6 text-center text-xs text-muted-foreground">
-                      {track.position}
+                      {track.track_number}
                     </span>
                     <FileText className="h-4 w-4 text-muted-foreground/50" />
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        {track.title || track.file_name || `Трек ${index + 1}`}
+                        {track.title || `Трек ${index + 1}`}
                       </p>
                     </div>
-                    {track.duration && (
+                    {track.duration_seconds != null && (
                       <span className="text-xs text-muted-foreground">
-                        {Math.floor(track.duration / 60)}:{String(track.duration % 60).padStart(2, '0')}
+                        {Math.floor(track.duration_seconds / 60)}:{String(track.duration_seconds % 60).padStart(2, '0')}
                       </span>
                     )}
                   </div>
@@ -232,7 +232,7 @@ function ReleaseDetail() {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Треков</p>
-              <p className="font-medium">{release.tracks_count}</p>
+              <p className="font-medium">{tracks.length}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Тип</p>

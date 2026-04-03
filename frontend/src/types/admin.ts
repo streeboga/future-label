@@ -2,14 +2,15 @@ export interface Artist {
   key: string;
   name: string;
   email: string;
-  releases_count: number;
+  role: string;
+  stage_name: string | null;
   created_at: string;
 }
 
 export interface AdminMetrics {
   total_artists: number;
   releases_this_month: number;
-  revenue: number;
+  total_revenue: string;
   pending_moderation: number;
 }
 
@@ -20,11 +21,7 @@ export interface ModerationAction {
 
 export interface Order {
   key: string;
-  release_title: string;
-  artist_name: string;
-  service_title: string;
-  amount: number;
-  currency: string;
   status: 'pending' | 'paid' | 'cancelled' | 'refunded';
+  notes: string | null;
   created_at: string;
 }

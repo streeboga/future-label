@@ -18,6 +18,10 @@ export async function fetchContracts(): Promise<Contract[]> {
   return response.data.data.map(mapContract);
 }
 
+export async function acceptContract(key: string): Promise<void> {
+  await api.patch(`/contracts/${key}/accept`);
+}
+
 export async function downloadContractPdf(key: string): Promise<void> {
   const response = await api.get(`/contracts/${key}/pdf`, {
     responseType: 'blob',

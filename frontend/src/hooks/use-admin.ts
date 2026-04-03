@@ -50,8 +50,3 @@ export function useAdminOrders(params?: { status?: string; page?: number }) {
   });
 }
 
-export function useExportReleases() {
-  return useMutation({
-    mutationFn: adminApi.exportReleasesJson,
-  });
-}

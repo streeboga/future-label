@@ -24,21 +24,54 @@ interface JsonApiCollection<T> {
   };
 }
 
-function mapArtist(item: { id: string; attributes: Omit<Artist, 'key'> }): Artist {
-  return { key: item.id, ...item.attributes };
+function mapArtist(item: { id: string; attributes: Record<string, unknown> }): Artist {
+  const attrs = item.attributes;
+  return {
+    key: item.id,
+    name: attrs.name as string,
+    email: attrs.email as string,
+    role: attrs.role as string,
+    stage_name: (attrs.stage_name as string | null) ?? null,
+    created_at: attrs.created_at as string,
+  };
 }
 
-function mapRelease(item: { id: string; attributes: Omit<Release, 'key'> }): Release {
-  return { key: item.id, ...item.attributes };
+function mapRelease(item: { id: string; attributes: Record<string, unknown> }): Release {
+  const attrs = item.attributes;
+  return {
+    key: item.id,
+    title: attrs.title as string,
+    artist_name: (attrs.artist_name as string | null) ?? '',
+    type: attrs.type as Release['type'],
+    status: attrs.status as Release['status'],
+    genre: (attrs.genre as string | null) ?? null,
+    language: (attrs.language as string | null) ?? null,
+    description: (attrs.description as string | null) ?? null,
+    release_date: (attrs.release_date as string | null) ?? null,
+    cover_url: (attrs.cover_url as string | null) ?? null,
+    reject_reason: (attrs.reject_reason as string | null) ?? null,
+    created_at: attrs.created_at as string,
+    updated_at: attrs.updated_at as string,
+  };
 }
 
-function mapOrder(item: { id: string; attributes: Omit<Order, 'key'> }): Order {
-  return { key: item.id, ...item.attributes };
+function mapOrder(item: {
+  id: string;
+  attributes: Record<string, unknown>;
+  relationships?: Record<string, { data?: { id: string; type: string; attributes?: Record<string, unknown> } }>;
+}): Order {
+  const attrs = item.attributes;
+  return {
+    key: item.id,
+    status: attrs.status as Order['status'],
+    notes: (attrs.notes as string | null) ?? null,
+    created_at: attrs.created_at as string,
+  };
 }
 
 export async function fetchAdminMetrics(): Promise<AdminMetrics> {
-  const response = await api.get<{ data: AdminMetrics }>('/admin/metrics');
-  return response.data.data;
+  const response = await api.get('/admin/dashboard');
+  return response.data.data.attributes;
 }
 
 export async function fetchArtists(params?: {
@@ -46,11 +79,11 @@ export async function fetchArtists(params?: {
   page?: number;
 }): Promise<{ data: Artist[]; meta?: JsonApiCollection<unknown>['meta'] }> {
   const searchParams = new URLSearchParams();
-  if (params?.search) searchParams.set('filter[search]', params.search);
+  if (params?.search) searchParams.set('search', params.search);
   if (params?.page) searchParams.set('page[number]', String(params.page));
 
-  const response = await api.get<JsonApiCollection<Omit<Artist, 'key'>>>(
-    `/admin/artists?${searchParams.toString()}`
+  const response = await api.get<JsonApiCollection<Record<string, unknown>>>(
+    `/admin/users?${searchParams.toString()}`
   );
   return {
     data: response.data.data.map(mapArtist),
@@ -59,7 +92,7 @@ export async function fetchArtists(params?: {
 }
 
 export async function fetchArtist(key: string): Promise<Artist> {
-  const response = await api.get<JsonApiResource<Omit<Artist, 'key'>>>(`/admin/artists/${key}`);
+  const response = await api.get<JsonApiResource<Record<string, unknown>>>(`/admin/users/${key}`);
   return mapArtist(response.data.data);
 }
 
@@ -70,10 +103,10 @@ export async function fetchAdminReleases(params?: {
 }): Promise<{ data: Release[]; meta?: JsonApiCollection<unknown>['meta'] }> {
   const searchParams = new URLSearchParams();
   if (params?.status) searchParams.set('filter[status]', params.status);
-  if (params?.search) searchParams.set('filter[search]', params.search);
+  if (params?.search) searchParams.set('search', params.search);
   if (params?.page) searchParams.set('page[number]', String(params.page));
 
-  const response = await api.get<JsonApiCollection<Omit<Release, 'key'>>>(
+  const response = await api.get<JsonApiCollection<Record<string, unknown>>>(
     `/admin/releases?${searchParams.toString()}`
   );
   return {
@@ -83,9 +116,9 @@ export async function fetchAdminReleases(params?: {
 }
 
 export async function moderateRelease(key: string, action: ModerationAction): Promise<Release> {
-  const response = await api.post<JsonApiResource<Omit<Release, 'key'>>>(
-    `/admin/releases/${key}/moderate`,
-    { data: { type: 'moderation', attributes: action } }
+  const response = await api.patch<JsonApiResource<Record<string, unknown>>>(
+    `/admin/releases/${key}/status`,
+    { action: action.action, comment: action.comment ?? null }
   );
   return mapRelease(response.data.data);
 }
@@ -98,25 +131,11 @@ export async function fetchOrders(params?: {
   if (params?.status) searchParams.set('filter[status]', params.status);
   if (params?.page) searchParams.set('page[number]', String(params.page));
 
-  const response = await api.get<JsonApiCollection<Omit<Order, 'key'>>>(
-    `/admin/orders?${searchParams.toString()}`
+  const response = await api.get<JsonApiCollection<Record<string, unknown>>>(
+    `/orders?${searchParams.toString()}`
   );
   return {
-    data: response.data.data.map(mapOrder),
+    data: response.data.data.map((item) => mapOrder(item as Parameters<typeof mapOrder>[0])),
     meta: response.data.meta,
   };
-}
-
-export async function exportReleasesJson(): Promise<void> {
-  const response = await api.get('/admin/releases/export', {
-    responseType: 'blob',
-  });
-  const url = window.URL.createObjectURL(new Blob([response.data as BlobPart]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', 'releases-export.json');
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
 }

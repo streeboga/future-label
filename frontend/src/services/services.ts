@@ -32,7 +32,7 @@ export async function fetchService(key: string): Promise<Service> {
 }
 
 export async function createService(payload: CreateServicePayload): Promise<Service> {
-  const response = await api.post<JsonApiResource<Omit<Service, 'key'>>>('/services', {
+  const response = await api.post<JsonApiResource<Omit<Service, 'key'>>>('/admin/services', {
     data: {
       type: 'services',
       attributes: payload,
@@ -42,7 +42,7 @@ export async function createService(payload: CreateServicePayload): Promise<Serv
 }
 
 export async function updateService(key: string, payload: UpdateServicePayload): Promise<Service> {
-  const response = await api.patch<JsonApiResource<Omit<Service, 'key'>>>(`/services/${key}`, {
+  const response = await api.patch<JsonApiResource<Omit<Service, 'key'>>>(`/admin/services/${key}`, {
     data: {
       type: 'services',
       id: key,
@@ -53,5 +53,5 @@ export async function updateService(key: string, payload: UpdateServicePayload):
 }
 
 export async function deleteService(key: string): Promise<void> {
-  await api.delete(`/services/${key}`);
+  await api.delete(`/admin/services/${key}`);
 }
