@@ -6,6 +6,14 @@ const statusConfig: Record<ReleaseStatus, { label: string; className: string }> 
     label: 'Черновик',
     className: 'bg-gray-100 text-gray-700 border-gray-200',
   },
+  awaiting_payment: {
+    label: 'Ожидает оплаты',
+    className: 'bg-orange-50 text-orange-700 border-orange-200',
+  },
+  awaiting_contract: {
+    label: 'Ожидает договора',
+    className: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  },
   in_review: {
     label: 'На проверке',
     className: 'bg-amber-50 text-amber-700 border-amber-200',

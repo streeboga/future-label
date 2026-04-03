@@ -13,16 +13,20 @@ export const Route = createFileRoute('/_authenticated/dashboard/releases/$key')(
 
 const statusTimeline: { status: ReleaseStatus; label: string }[] = [
   { status: 'draft', label: 'Черновик' },
-  { status: 'in_review', label: 'На проверке' },
+  { status: 'awaiting_payment', label: 'Оплата' },
+  { status: 'awaiting_contract', label: 'Договор' },
+  { status: 'in_review', label: 'Проверка' },
   { status: 'approved', label: 'Одобрен' },
   { status: 'published', label: 'Опубликован' },
 ];
 
 const statusOrder: Record<ReleaseStatus, number> = {
   draft: 0,
-  in_review: 1,
-  approved: 2,
-  published: 3,
+  awaiting_payment: 1,
+  awaiting_contract: 2,
+  in_review: 3,
+  approved: 4,
+  published: 5,
   rejected: -1,
 };
 

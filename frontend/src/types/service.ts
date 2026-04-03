@@ -25,6 +25,7 @@ export interface UpdateServicePayload {
   title?: string;
   description?: string | null;
   price?: number;
+  currency?: string;
   category?: string;
   sort_order?: number;
   is_active?: boolean;

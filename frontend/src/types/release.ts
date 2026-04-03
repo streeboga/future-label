@@ -1,6 +1,6 @@
 export type ReleaseType = 'single' | 'ep' | 'album';
 
-export type ReleaseStatus = 'draft' | 'in_review' | 'approved' | 'published' | 'rejected';
+export type ReleaseStatus = 'draft' | 'awaiting_payment' | 'awaiting_contract' | 'in_review' | 'approved' | 'published' | 'rejected';
 
 export interface Release {
   key: string;
@@ -26,8 +26,8 @@ export interface Track {
   file_url: string | null;
   format: string;
   file_size: number | null;
-  authors: string[] | null;
-  composers: string[] | null;
+  authors: string | null;
+  composers: string | null;
   lyrics: string | null;
   isrc: string | null;
   created_at: string;
@@ -48,4 +48,6 @@ export interface UpdateReleasePayload {
   language?: string | null;
   description?: string | null;
   release_date?: string | null;
+  cover_url?: string | null;
+  metadata?: Record<string, unknown> | null;
 }

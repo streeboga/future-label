@@ -57,8 +57,8 @@ function mapTrack(item: { id: string; attributes: Record<string, unknown> }): Tr
     file_url: (attrs.file_url as string | null) ?? null,
     format: attrs.format as string,
     file_size: (attrs.file_size as number | null) ?? null,
-    authors: (attrs.authors as string[] | null) ?? null,
-    composers: (attrs.composers as string[] | null) ?? null,
+    authors: (attrs.authors as string | null) ?? null,
+    composers: (attrs.composers as string | null) ?? null,
     lyrics: (attrs.lyrics as string | null) ?? null,
     isrc: (attrs.isrc as string | null) ?? null,
     created_at: attrs.created_at as string,
@@ -91,23 +91,12 @@ export async function fetchRelease(key: string): Promise<Release> {
 }
 
 export async function createRelease(payload: CreateReleasePayload): Promise<Release> {
-  const response = await api.post<JsonApiResource<Record<string, unknown>>>('/releases', {
-    data: {
-      type: 'releases',
-      attributes: payload,
-    },
-  });
+  const response = await api.post<JsonApiResource<Record<string, unknown>>>('/releases', payload);
   return mapRelease(response.data.data);
 }
 
 export async function updateRelease(key: string, payload: UpdateReleasePayload): Promise<Release> {
-  const response = await api.patch<JsonApiResource<Record<string, unknown>>>(`/releases/${key}`, {
-    data: {
-      type: 'releases',
-      id: key,
-      attributes: payload,
-    },
-  });
+  const response = await api.patch<JsonApiResource<Record<string, unknown>>>(`/releases/${key}`, payload);
   return mapRelease(response.data.data);
 }
 
@@ -127,17 +116,48 @@ export async function fetchReleaseTracks(releaseKey: string): Promise<Track[]> {
   return response.data.data.map(mapTrack);
 }
 
-export async function uploadTrack(releaseKey: string, file: File, position: number): Promise<Track> {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('position', String(position));
-
+export async function createTrack(releaseKey: string, data: {
+  title: string;
+  file_url?: string;
+  format: string;
+  file_size?: number;
+  track_number?: number;
+  duration_seconds?: number;
+  authors?: string;
+  composers?: string;
+  lyrics?: string;
+  isrc?: string;
+}): Promise<Track> {
   const response = await api.post<JsonApiResource<Record<string, unknown>>>(
     `/releases/${releaseKey}/tracks`,
-    formData,
-    { headers: { 'Content-Type': 'multipart/form-data' } }
+    data
   );
   return mapTrack(response.data.data);
+}
+
+export async function uploadTrack(
+  releaseKey: string,
+  file: File,
+  position: number,
+): Promise<Track> {
+  const name = file.name.replace(/\.[^.]+$/, '');
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'mp3';
+  const formatMap: Record<string, string> = {
+    mp3: 'mp3',
+    wav: 'wav',
+    flac: 'flac',
+    aac: 'aac',
+    ogg: 'ogg',
+  };
+  const format = formatMap[ext] ?? 'mp3';
+
+  return createTrack(releaseKey, {
+    title: name,
+    file_url: `https://storage.example.com/uploads/${file.name}`,
+    format,
+    file_size: file.size,
+    track_number: position,
+  });
 }
 
 export async function deleteTrack(releaseKey: string, trackKey: string): Promise<void> {

@@ -15,7 +15,7 @@ export interface AdminMetrics {
 }
 
 export interface ModerationAction {
-  action: 'approve' | 'reject';
+  action: 'approve' | 'reject' | 'publish';
   comment?: string;
 }
 
