@@ -84,5 +84,8 @@ final class DatabaseSeeder extends Seeder
 
         // 2 unverified artists
         User::factory()->artist()->unverified()->count(2)->create();
+
+        // Demo data: releases, tracks, contracts, payments, services, orders, notifications
+        $this->call(DemoDataSeeder::class);
     }
 }

@@ -26,7 +26,7 @@ final class StoreTrackRequest extends FormRequest
             'format' => ['required', 'string', Rule::in(TrackFormat::values())],
             'track_number' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:30'],
             'duration_seconds' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:7200'],
-            'file' => ['sometimes', 'file', 'mimes:mp3,wav,flac,aac,ogg', 'max:102400'],
+            'file' => ['sometimes', 'file', 'mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/flac,audio/aac,audio/ogg,application/octet-stream', 'max:102400'],
             'file_url' => ['sometimes', 'nullable', 'string', 'max:2048'],
             'file_size' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'authors' => ['sometimes', 'nullable', 'string', 'max:500'],
