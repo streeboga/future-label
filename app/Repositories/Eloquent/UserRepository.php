@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories\Eloquent;
 
+use App\Builders\UserQueryBuilder;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -12,7 +13,11 @@ final class UserRepository implements UserRepositoryInterface
 {
     public function findByKey(string $key): User
     {
-        $model = User::where('key', $key)->first();
+        $model = UserQueryBuilder::make()
+            ->byKey($key)
+            ->getQuery()
+            ->first();
+
         if (! $model) {
             throw new ModelNotFoundException("User not found with key [{$key}].");
         }

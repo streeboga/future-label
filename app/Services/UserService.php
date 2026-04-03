@@ -25,7 +25,8 @@ final readonly class UserService
      */
     public function register(CreateUserData $data): array
     {
-        return DB::transaction(function () use ($data): array {
+        /** @var array{user: User, token: string} $result */
+        $result = DB::transaction(function () use ($data): array {
             $user = $this->repository->create([
                 'name' => $data->name,
                 'email' => $data->email,
@@ -35,14 +36,16 @@ final readonly class UserService
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            $user->notify(new VerifyEmail);
-
-            event(new UserRegistered($user));
-
             return [
                 'user' => $user,
                 'token' => $token,
             ];
         });
+
+        $result['user']->notify(new VerifyEmail);
+
+        event(new UserRegistered($result['user']));
+
+        return $result;
     }
 }

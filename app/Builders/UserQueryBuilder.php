@@ -37,6 +37,13 @@ final class UserQueryBuilder
         return $this;
     }
 
+    public function byKey(string $key): self
+    {
+        $this->query->where('key', $key);
+
+        return $this;
+    }
+
     public function byEmail(string $email): self
     {
         $this->query->where('email', mb_strtolower($email));
@@ -46,9 +53,11 @@ final class UserQueryBuilder
 
     public function search(string $term): self
     {
-        $this->query->where(function (Builder $q) use ($term): void {
-            $q->where('name', 'like', "%{$term}%")
-                ->orWhere('email', 'like', "%{$term}%");
+        $escaped = str_replace(['%', '_'], ['\%', '\_'], $term);
+
+        $this->query->where(function (Builder $q) use ($escaped): void {
+            $q->where('name', 'like', "%{$escaped}%")
+                ->orWhere('email', 'like', "%{$escaped}%");
         });
 
         return $this;
