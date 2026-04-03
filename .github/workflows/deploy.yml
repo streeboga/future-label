@@ -27,7 +27,7 @@ jobs:
             # Build frontend
             cd frontend
             npm install
-            npx tsc -b && VITE_API_URL=https://api-fl.eq.team npx vite build
+            npx tsc -b && VITE_API_URL=https://api-fl.eq.team/api/v1 npx vite build
             cp -r dist/* /var/www/future-label.eq.team/
             cd ..
 
