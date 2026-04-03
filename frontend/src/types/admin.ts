@@ -21,7 +21,7 @@ export interface ModerationAction {
 
 export interface Order {
   key: string;
-  status: 'pending' | 'paid' | 'cancelled' | 'refunded';
+  status: 'pending' | 'paid' | 'in_progress' | 'completed' | 'cancelled';
   notes: string | null;
   created_at: string;
 }

@@ -26,11 +26,12 @@ export const Route = createFileRoute('/_admin/admin/orders')({
   component: AdminOrders,
 });
 
-const orderStatusConfig: Record<Order['status'], { label: string; className: string }> = {
+const orderStatusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: 'Ожидает', className: 'bg-amber-50 text-amber-700 border-amber-200' },
-  paid: { label: 'Оплачен', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  paid: { label: 'Оплачен', className: 'bg-blue-50 text-blue-700 border-blue-200' },
+  in_progress: { label: 'В работе', className: 'bg-purple-50 text-purple-700 border-purple-200' },
+  completed: { label: 'Завершён', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
   cancelled: { label: 'Отменён', className: 'bg-gray-100 text-gray-500 border-gray-200' },
-  refunded: { label: 'Возврат', className: 'bg-red-50 text-red-700 border-red-200' },
 };
 
 function AdminOrders() {
@@ -69,8 +70,9 @@ function AdminOrders() {
               <SelectItem value="all">Все статусы</SelectItem>
               <SelectItem value="pending">Ожидает</SelectItem>
               <SelectItem value="paid">Оплачен</SelectItem>
+              <SelectItem value="in_progress">В работе</SelectItem>
+              <SelectItem value="completed">Завершён</SelectItem>
               <SelectItem value="cancelled">Отменён</SelectItem>
-              <SelectItem value="refunded">Возврат</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>

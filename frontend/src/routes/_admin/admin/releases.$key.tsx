@@ -37,7 +37,7 @@ function AdminReleaseDetail() {
   const { data: tracks = [] } = useReleaseTracks(key);
   const moderateRelease = useModerateRelease();
 
-  const [moderationModal, setModerationModal] = useState<'approve' | 'reject' | null>(null);
+  const [moderationModal, setModerationModal] = useState<'approve' | 'reject' | 'publish' | null>(null);
   const [comment, setComment] = useState('');
   const [playingTrack, setPlayingTrack] = useState<string | null>(null);
 
@@ -143,6 +143,18 @@ function AdminReleaseDetail() {
               >
                 <XCircle className="h-4 w-4" />
                 Отклонить
+              </Button>
+            </div>
+          )}
+          {release.status === 'approved' && (
+            <div className="mt-4">
+              <Button
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setModerationModal('publish')}
+              >
+                <Globe className="h-4 w-4" />
+                Опубликовать
               </Button>
             </div>
           )}
@@ -261,15 +273,24 @@ function AdminReleaseDetail() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {moderationModal === 'approve' ? 'Одобрить релиз' : 'Отклонить релиз'}
+              {moderationModal === 'approve' && 'Одобрить релиз'}
+              {moderationModal === 'reject' && 'Отклонить релиз'}
+              {moderationModal === 'publish' && 'Опубликовать релиз'}
             </DialogTitle>
           </DialogHeader>
-          <Textarea
-            placeholder="Комментарий..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            rows={3}
-          />
+          {moderationModal !== 'publish' && (
+            <Textarea
+              placeholder="Комментарий..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              rows={3}
+            />
+          )}
+          {moderationModal === 'publish' && (
+            <p className="text-sm text-muted-foreground">
+              Релиз будет опубликован и станет доступен на площадках. Продолжить?
+            </p>
+          )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setModerationModal(null)}>
               Отмена
@@ -280,7 +301,9 @@ function AdminReleaseDetail() {
               variant={moderationModal === 'reject' ? 'destructive' : 'default'}
             >
               {moderateRelease.isPending && <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />}
-              {moderationModal === 'approve' ? 'Одобрить' : 'Отклонить'}
+              {moderationModal === 'approve' && 'Одобрить'}
+              {moderationModal === 'reject' && 'Отклонить'}
+              {moderationModal === 'publish' && 'Опубликовать'}
             </Button>
           </DialogFooter>
         </DialogContent>

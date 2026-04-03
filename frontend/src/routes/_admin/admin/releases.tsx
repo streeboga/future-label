@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { ReleaseStatusBadge } from '@/components/release-status-badge';
-import { CheckCircle2, XCircle, Search, Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Search, Loader2, Globe } from 'lucide-react';
 
 export const Route = createFileRoute('/_admin/admin/releases')({
   component: AdminReleases,
@@ -49,7 +49,7 @@ function AdminReleases() {
 
   const [moderationModal, setModerationModal] = useState<{
     key: string;
-    action: 'approve' | 'reject';
+    action: 'approve' | 'reject' | 'publish';
   } | null>(null);
   const [moderationComment, setModerationComment] = useState('');
 
@@ -196,6 +196,18 @@ function AdminReleases() {
                               </Button>
                             </div>
                           )}
+                          {release.status === 'approved' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700"
+                              onClick={() =>
+                                setModerationModal({ key: release.key, action: 'publish' })
+                              }
+                            >
+                              <Globe className="h-4 w-4" />
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -245,17 +257,25 @@ function AdminReleases() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {moderationModal?.action === 'approve' ? 'Одобрить релиз' : 'Отклонить релиз'}
+              {moderationModal?.action === 'approve' && 'Одобрить релиз'}
+              {moderationModal?.action === 'reject' && 'Отклонить релиз'}
+              {moderationModal?.action === 'publish' && 'Опубликовать релиз'}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-3">
-            <Textarea
-              placeholder="Комментарий (необязательно)..."
-              value={moderationComment}
-              onChange={(e) => setModerationComment(e.target.value)}
-              rows={3}
-            />
-          </div>
+          {moderationModal?.action !== 'publish' ? (
+            <div className="space-y-3">
+              <Textarea
+                placeholder="Комментарий (необязательно)..."
+                value={moderationComment}
+                onChange={(e) => setModerationComment(e.target.value)}
+                rows={3}
+              />
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Релиз будет опубликован и станет доступен на площадках. Продолжить?
+            </p>
+          )}
           <DialogFooter>
             <Button
               variant="outline"
@@ -272,7 +292,9 @@ function AdminReleases() {
               variant={moderationModal?.action === 'reject' ? 'destructive' : 'default'}
             >
               {moderateRelease.isPending && <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />}
-              {moderationModal?.action === 'approve' ? 'Одобрить' : 'Отклонить'}
+              {moderationModal?.action === 'approve' && 'Одобрить'}
+              {moderationModal?.action === 'reject' && 'Отклонить'}
+              {moderationModal?.action === 'publish' && 'Опубликовать'}
             </Button>
           </DialogFooter>
         </DialogContent>
