@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const Route = createFileRoute('/_admin')({
   beforeLoad: () => {
@@ -55,7 +56,7 @@ function AdminLayout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile header */}
-      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b bg-white/80 px-4 backdrop-blur-sm lg:hidden">
+      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm lg:hidden">
         <div className="flex items-center gap-2">
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -63,6 +64,7 @@ function AdminLayout() {
           <Music2 className="h-5 w-5 text-primary" />
           <span className="text-sm font-semibold">Admin</span>
         </div>
+        <ThemeToggle />
         <Button variant="ghost" size="sm" onClick={logout}>
           <LogOut className="h-4 w-4" />
         </Button>
@@ -71,7 +73,7 @@ function AdminLayout() {
       <div className="flex">
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-30 w-56 transform border-r bg-white transition-transform lg:static lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-30 w-56 transform border-r bg-background transition-transform lg:static lg:translate-x-0 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -113,6 +115,7 @@ function AdminLayout() {
                 <p className="truncate text-sm font-medium">{user?.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
               </div>
+              <ThemeToggle />
               <Button variant="ghost" size="sm" onClick={logout} className="h-8 w-8 p-0">
                 <LogOut className="h-4 w-4" />
               </Button>

@@ -95,13 +95,26 @@ final class ReleaseController extends Controller
     /**
      * Update a release
      *
-     * Updates release fields. Only allowed in draft or rejected status.
+     * Updates release fields. Only allowed in draft or rejected status. Accepts multipart/form-data with cover image.
      */
     public function update(UpdateReleaseRequest $request, Release $release): ReleaseResource
     {
         Gate::authorize('update', $release);
 
-        $updatedRelease = $this->service->update($release, $request->toDto());
+        $dto = $request->toDto();
+
+        // Handle cover file upload
+        $coverFile = $request->file('cover');
+        if ($coverFile instanceof \Illuminate\Http\UploadedFile) {
+            $path = $coverFile->store("covers/{$release->key}", 'public');
+            if ($path !== false) {
+                $dto = new \App\DataTransferObjects\Release\UpdateReleaseData(
+                    ...[...$dto->toArray(), 'cover_url' => "/storage/{$path}"],
+                );
+            }
+        }
+
+        $updatedRelease = $this->service->update($release, $dto);
 
         return ReleaseResource::make($updatedRelease);
     }
@@ -118,6 +131,27 @@ final class ReleaseController extends Controller
         $this->service->delete($release);
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Attach services to a release
+     *
+     * Syncs selected services for the release. Only allowed in draft or rejected status.
+     */
+    public function syncServices(Request $request, Release $release): ReleaseResource
+    {
+        Gate::authorize('update', $release);
+
+        $serviceKeys = $request->validate([
+            'service_keys' => ['required', 'array'],
+            'service_keys.*' => ['required', 'string', 'exists:services,key'],
+        ]);
+
+        $serviceIds = \App\Models\ServiceCatalog::whereIn('key', $serviceKeys['service_keys'])->pluck('id')->all();
+
+        $updatedRelease = $this->service->syncServices($release, $serviceIds);
+
+        return ReleaseResource::make($updatedRelease);
     }
 
     /**

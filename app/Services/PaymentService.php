@@ -9,11 +9,11 @@ use App\DataTransferObjects\Payment\CreatePaymentData;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReleaseStatus;
+use App\Events\PaymentConfirmed;
 use App\Models\Payment;
 use App\Models\Release;
 use App\Models\User;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
-use App\Repositories\Contracts\ReleaseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -22,7 +22,7 @@ final readonly class PaymentService
 {
     public function __construct(
         private PaymentRepositoryInterface $paymentRepository,
-        private ReleaseRepositoryInterface $releaseRepository,
+        private ReleaseService $releaseService,
         private PaymentProviderInterface $paymentProvider,
     ) {}
 
@@ -100,7 +100,7 @@ final readonly class PaymentService
         }
 
         /** @var Payment */
-        return DB::transaction(function () use ($payment, $newStatus, $webhookData): Payment {
+        $payment = DB::transaction(function () use ($payment, $newStatus, $webhookData): Payment {
             $updateData = [
                 'status' => $newStatus,
                 'provider_data' => $webhookData,
@@ -110,15 +110,15 @@ final readonly class PaymentService
                 $updateData['receipt_url'] = $webhookData['receipt_url'];
             }
 
-            $payment = $this->paymentRepository->update($payment, $updateData);
-
-            // Transition release status when payment is successful
-            if ($newStatus === PaymentStatus::Paid && $payment->release_id !== null) {
-                $this->transitionReleaseAfterPayment($payment);
-            }
-
-            return $payment;
+            return $this->paymentRepository->update($payment, $updateData);
         });
+
+        // Transition release status when payment is successful
+        if ($newStatus === PaymentStatus::Paid && $payment->release_id !== null) {
+            $this->transitionReleaseAfterPayment($payment);
+        }
+
+        return $payment;
     }
 
     /**
@@ -139,20 +139,18 @@ final readonly class PaymentService
         }
 
         /** @var Payment */
-        return DB::transaction(function () use ($payment, $confirmedBy): Payment {
-            $payment = $this->paymentRepository->update($payment, [
-                'status' => PaymentStatus::Confirmed,
-                'confirmed_by' => $confirmedBy->id,
-                'confirmed_at' => now(),
-            ]);
+        $payment = DB::transaction(fn (): Payment => $this->paymentRepository->update($payment, [
+            'status' => PaymentStatus::Confirmed,
+            'confirmed_by' => $confirmedBy->id,
+            'confirmed_at' => now(),
+        ]));
 
-            // Transition release status when payment is confirmed
-            if ($payment->release_id !== null) {
-                $this->transitionReleaseAfterPayment($payment);
-            }
+        // Transition release status when payment is confirmed
+        if ($payment->release_id !== null) {
+            $this->transitionReleaseAfterPayment($payment);
+        }
 
-            return $payment;
-        });
+        return $payment;
     }
 
     /**
@@ -243,12 +241,7 @@ final readonly class PaymentService
 
         $release = $release->refresh();
 
-        if ($release->status === ReleaseStatus::AwaitingPayment) {
-            $targetStatus = ReleaseStatus::InReview;
-
-            if ($release->status->canTransitionTo($targetStatus)) {
-                $this->releaseRepository->updateStatus($release, $targetStatus);
-            }
-        }
+        // AwaitingPayment → AwaitingContract
+        $this->releaseService->transitionAfterPayment($release);
     }
 }

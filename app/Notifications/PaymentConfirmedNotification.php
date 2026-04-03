@@ -29,10 +29,9 @@ final class PaymentConfirmedNotification extends Notification implements ShouldQ
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("Payment confirmed — Order {$this->orderKey}")
-            ->view('emails.payment-confirmed', [
-                'orderKey' => $this->orderKey,
-                'serviceName' => $this->serviceName,
-            ]);
+            ->subject("Оплата подтверждена — Заказ {$this->orderKey}")
+            ->greeting('Оплата получена')
+            ->line("Ваш платёж за услугу **{$this->serviceName}** (заказ {$this->orderKey}) подтверждён.")
+            ->salutation('Спасибо, ' . config('app.name'));
     }
 }

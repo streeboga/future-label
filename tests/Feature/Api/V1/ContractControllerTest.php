@@ -361,44 +361,16 @@ it('returns 401 for unauthenticated PDF download', function (): void {
     $response->assertUnauthorized();
 });
 
-// --- Release submit requires accepted contract ---
+// --- Release submit (no payment/contract required for now) ---
 
-it('rejects release submit without accepted contract', function (): void {
+it('allows release submit without contract (payment handled manually)', function (): void {
     $user = User::factory()->artist()->create();
     $release = Release::factory()->draft()->create(['user_id' => $user->id]);
-
-    $response = $this->actingAs($user)->postJson("/api/v1/releases/{$release->key}/submit");
-
-    $response->assertUnprocessable();
-    $response->assertJsonValidationErrorFor('contract');
-});
-
-it('allows release submit with accepted contract', function (): void {
-    $user = User::factory()->artist()->create();
-    $release = Release::factory()->draft()->create(['user_id' => $user->id]);
-    Contract::factory()->accepted()->create([
-        'user_id' => $user->id,
-        'release_id' => $release->id,
-    ]);
 
     $response = $this->actingAs($user)->postJson("/api/v1/releases/{$release->key}/submit");
 
     $response->assertOk();
     $response->assertJsonPath('data.attributes.status', 'in_review');
-});
-
-it('rejects release submit with only pending contract', function (): void {
-    $user = User::factory()->artist()->create();
-    $release = Release::factory()->draft()->create(['user_id' => $user->id]);
-    Contract::factory()->pending()->create([
-        'user_id' => $user->id,
-        'release_id' => $release->id,
-    ]);
-
-    $response = $this->actingAs($user)->postJson("/api/v1/releases/{$release->key}/submit");
-
-    $response->assertUnprocessable();
-    $response->assertJsonValidationErrorFor('contract');
 });
 
 // --- ContractStatus enum ---

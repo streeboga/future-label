@@ -151,15 +151,54 @@ export async function uploadTrack(
   };
   const format = formatMap[ext] ?? 'mp3';
 
-  return createTrack(releaseKey, {
-    title: name,
-    file_url: `https://storage.example.com/uploads/${file.name}`,
-    format,
-    file_size: file.size,
-    track_number: position,
-  });
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('title', name);
+  formData.append('format', format);
+  formData.append('track_number', String(position));
+
+  const response = await api.post<JsonApiResource<Record<string, unknown>>>(
+    `/releases/${releaseKey}/tracks`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+  return mapTrack(response.data.data);
 }
 
 export async function deleteTrack(releaseKey: string, trackKey: string): Promise<void> {
   await api.delete(`/releases/${releaseKey}/tracks/${trackKey}`);
+}
+
+export async function uploadCover(releaseKey: string, file: File): Promise<Release> {
+  const formData = new FormData();
+  formData.append('cover', file);
+
+  const response = await api.patch<JsonApiResource<Record<string, unknown>>>(
+    `/releases/${releaseKey}`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+  return mapRelease(response.data.data);
+}
+
+export async function syncServices(releaseKey: string, serviceKeys: string[]): Promise<Release> {
+  const response = await api.post<JsonApiResource<Record<string, unknown>>>(
+    `/releases/${releaseKey}/services`,
+    { service_keys: serviceKeys },
+  );
+  return mapRelease(response.data.data);
+}
+
+export async function initiatePayment(releaseKey: string, method: 'online' | 'manual'): Promise<{
+  key: string;
+  status: string;
+  payment_url?: string;
+}> {
+  const response = await api.post(`/releases/${releaseKey}/pay`, { method });
+  const data = response.data as { data: { id: string; attributes: Record<string, unknown> } };
+  return {
+    key: data.data.id,
+    status: data.data.attributes.status as string,
+    payment_url: data.data.attributes.payment_url as string | undefined,
+  };
 }

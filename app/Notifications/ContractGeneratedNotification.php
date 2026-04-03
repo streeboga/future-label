@@ -29,10 +29,10 @@ final class ContractGeneratedNotification extends Notification implements Should
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("Contract ready — {$this->releaseTitle}")
-            ->view('emails.contract-generated', [
-                'releaseTitle' => $this->releaseTitle,
-                'contractUrl' => $this->contractUrl,
-            ]);
+            ->subject("Договор готов — {$this->releaseTitle}")
+            ->greeting('Договор сформирован')
+            ->line("Договор для релиза **{$this->releaseTitle}** готов к подписанию.")
+            ->line('Перейдите в личный кабинет для просмотра и подписания.')
+            ->salutation('Спасибо, ' . config('app.name'));
     }
 }

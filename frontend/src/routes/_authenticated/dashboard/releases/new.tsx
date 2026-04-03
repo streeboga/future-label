@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreateRelease, useUpdateRelease, useUploadTrack, useSubmitRelease } from '@/hooks/use-releases';
+import { useCreateRelease, useUpdateRelease, useUploadTrack, useUploadCover, useSyncServices, useSubmitRelease } from '@/hooks/use-releases';
 import { useServices } from '@/hooks/use-services';
 import type { ReleaseType, Release, Track } from '@/types/release';
 import type { Service } from '@/types/service';
@@ -63,12 +63,16 @@ function ReleaseWizard() {
   const [description, setDescription] = useState('');
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const createRelease = useCreateRelease();
   const updateRelease = useUpdateRelease();
   const uploadTrack = useUploadTrack();
+  const uploadCover = useUploadCover();
+  const syncServices = useSyncServices();
   const submitRelease = useSubmitRelease();
   const { data: services = [] } = useServices();
 
@@ -100,6 +104,15 @@ function ReleaseWizard() {
             description: description || null,
           },
         });
+        // Upload cover image if selected
+        if (coverFile) {
+          const updated = await uploadCover.mutateAsync({ releaseKey: release.key, file: coverFile });
+          setRelease(updated);
+          setCoverFile(null);
+        }
+      } else if (step === 4 && release && selectedServices.length > 0) {
+        // Sync selected services with backend
+        await syncServices.mutateAsync({ releaseKey: release.key, serviceKeys: selectedServices });
       }
       setStep((s) => Math.min(s + 1, 5) as WizardStep);
     } catch {
@@ -133,6 +146,7 @@ function ReleaseWizard() {
 
   const handleCoverUpload = (file: File) => {
     setCoverPreview(URL.createObjectURL(file));
+    setCoverFile(file);
   };
 
   const handleRemoveTrack = (index: number) => {

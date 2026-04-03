@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useContracts, useDownloadContract } from '@/hooks/use-contracts';
+import { useContracts, useDownloadContract, useAcceptContract } from '@/hooks/use-contracts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Download, FileText, Loader2 } from 'lucide-react';
+import { CheckCircle, Download, FileText, Loader2 } from 'lucide-react';
 import type { ContractStatus } from '@/types/contract';
 
 export const Route = createFileRoute('/_authenticated/dashboard/contracts')({
@@ -28,6 +28,7 @@ const statusConfig: Record<ContractStatus, { label: string; className: string }>
 function ContractsPage() {
   const { data: contracts = [], isLoading } = useContracts();
   const downloadContract = useDownloadContract();
+  const acceptContract = useAcceptContract();
 
   return (
     <div className="space-y-6">
@@ -88,21 +89,39 @@ function ContractsPage() {
                           {new Date(contract.created_at).toLocaleDateString('ru-RU')}
                         </TableCell>
                         <TableCell>
-                          {contract.pdf_url && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                              disabled={downloadContract.isPending}
-                              onClick={() => downloadContract.mutate(contract.key)}
-                            >
-                              {downloadContract.isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Download className="h-4 w-4" />
-                              )}
-                            </Button>
-                          )}
+                          <div className="flex items-center gap-1">
+                            {contract.status === 'pending' && (
+                              <Button
+                                variant="default"
+                                size="sm"
+                                className="h-8 gap-1 text-xs"
+                                disabled={acceptContract.isPending}
+                                onClick={() => acceptContract.mutate(contract.key)}
+                              >
+                                {acceptContract.isPending ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <CheckCircle className="h-3.5 w-3.5" />
+                                )}
+                                Подписать
+                              </Button>
+                            )}
+                            {contract.pdf_url && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                disabled={downloadContract.isPending}
+                                onClick={() => downloadContract.mutate(contract.key)}
+                              >
+                                {downloadContract.isPending ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Download className="h-4 w-4" />
+                                )}
+                              </Button>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     );

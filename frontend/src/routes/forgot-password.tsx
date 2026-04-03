@@ -14,7 +14,7 @@ export const Route = createFileRoute('/forgot-password')({
 });
 
 const forgotSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Некорректный email'),
 });
 
 type ForgotFormData = z.infer<typeof forgotSchema>;
@@ -41,18 +41,17 @@ function ForgotPasswordPage() {
 
   return (
     <AuthLayout
-      title="Reset your password"
-      description="Enter your email and we'll send you a reset link"
+      title="Восстановление пароля"
+      description="Введите email для получения ссылки на сброс пароля"
       footer={
         <Link to="/login" className="font-medium text-foreground underline underline-offset-4 hover:text-accent">
-          Back to sign in
+          Назад к входу
         </Link>
       }
     >
       {submitted ? (
         <div className="rounded-md border border-accent/50 bg-accent/10 px-3 py-3 text-center text-sm text-accent">
-          If an account with that email exists, we've sent a password reset link.
-          Check your inbox.
+          Если аккаунт с таким email существует, мы отправили ссылку для сброса пароля. Проверьте почту.
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -72,7 +71,7 @@ function ForgotPasswordPage() {
           </div>
 
           <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Sending...' : 'Send reset link'}
+            {isSubmitting ? 'Отправка...' : 'Отправить ссылку'}
           </Button>
         </form>
       )}

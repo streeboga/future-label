@@ -29,7 +29,8 @@ final class UpdateReleaseRequest extends FormRequest
             'language' => ['sometimes', 'nullable', 'string', 'max:10'],
             'description' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'release_date' => ['sometimes', 'nullable', 'date', 'after:today'],
-            'cover_url' => ['sometimes', 'nullable', 'string', 'url', 'max:2048'],
+            'cover' => ['sometimes', 'file', 'image', 'max:10240', 'dimensions:min_width=1400,min_height=1400'],
+            'cover_url' => ['sometimes', 'nullable', 'string', 'max:2048'],
             'metadata' => ['sometimes', 'nullable', 'array'],
         ];
     }

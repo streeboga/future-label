@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect, Link, useMatchRoute } from '@tanstac
 import { useAuth } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import {
+  Bell,
   LayoutDashboard,
   Music2,
   FileText,
@@ -10,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useState } from 'react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: () => {
@@ -24,6 +26,7 @@ export const Route = createFileRoute('/_authenticated')({
 const navItems = [
   { to: '/dashboard' as const, label: 'Дашборд', icon: LayoutDashboard },
   { to: '/dashboard/contracts' as const, label: 'Контракты', icon: FileText },
+  { to: '/dashboard/notifications' as const, label: 'Уведомления', icon: Bell },
 ];
 
 function AuthenticatedLayout() {
@@ -34,7 +37,7 @@ function AuthenticatedLayout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6">
             <Link to="/dashboard" className="flex items-center gap-2">
@@ -65,6 +68,7 @@ function AuthenticatedLayout() {
             <span className="hidden text-sm text-muted-foreground sm:inline">
               {user?.name}
             </span>
+            <ThemeToggle />
             <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5">
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Выход</span>

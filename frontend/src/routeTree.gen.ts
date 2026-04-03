@@ -23,6 +23,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin/index'
+import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard/notifications'
 import { Route as AuthenticatedDashboardContractsRouteImport } from './routes/_authenticated/dashboard/contracts'
 import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin/services'
 import { Route as AdminAdminReleasesRouteImport } from './routes/_admin/admin/releases'
@@ -100,6 +101,12 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminAdminRoute,
 } as any)
+const AuthenticatedDashboardNotificationsRoute =
+  AuthenticatedDashboardNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardContractsRoute =
   AuthenticatedDashboardContractsRouteImport.update({
     id: '/contracts',
@@ -159,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
   '/admin/services': typeof AdminAdminServicesRoute
   '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
@@ -178,6 +186,7 @@ export interface FileRoutesByTo {
   '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
   '/admin/services': typeof AdminAdminServicesRoute
   '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/admin': typeof AdminAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
@@ -203,6 +212,7 @@ export interface FileRoutesById {
   '/_admin/admin/releases': typeof AdminAdminReleasesRouteWithChildren
   '/_admin/admin/services': typeof AdminAdminServicesRoute
   '/_authenticated/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_admin/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/admin/releases'
     | '/admin/services'
     | '/dashboard/contracts'
+    | '/dashboard/notifications'
     | '/admin/'
     | '/dashboard/'
     | '/admin/releases/$key'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/admin/releases'
     | '/admin/services'
     | '/dashboard/contracts'
+    | '/dashboard/notifications'
     | '/admin'
     | '/dashboard'
     | '/admin/releases/$key'
@@ -269,6 +281,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/releases'
     | '/_admin/admin/services'
     | '/_authenticated/dashboard/contracts'
+    | '/_authenticated/dashboard/notifications'
     | '/_admin/admin/'
     | '/_authenticated/dashboard/'
     | '/_admin/admin/releases/$key'
@@ -386,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminAdminRoute
     }
+    '/_authenticated/dashboard/notifications': {
+      id: '/_authenticated/dashboard/notifications'
+      path: '/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/contracts': {
       id: '/_authenticated/dashboard/contracts'
       path: '/contracts'
@@ -488,6 +508,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardContractsRoute: typeof AuthenticatedDashboardContractsRoute
+  AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardReleasesKeyRoute: typeof AuthenticatedDashboardReleasesKeyRoute
   AuthenticatedDashboardReleasesNewRoute: typeof AuthenticatedDashboardReleasesNewRoute
@@ -496,6 +517,8 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardContractsRoute: AuthenticatedDashboardContractsRoute,
+    AuthenticatedDashboardNotificationsRoute:
+      AuthenticatedDashboardNotificationsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
     AuthenticatedDashboardReleasesKeyRoute:
       AuthenticatedDashboardReleasesKeyRoute,

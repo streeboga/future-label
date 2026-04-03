@@ -67,6 +67,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('releases/{release}', [ReleaseController::class, 'show'])->name('releases.show');
         Route::patch('releases/{release}', [ReleaseController::class, 'update'])->name('releases.update');
         Route::delete('releases/{release}', [ReleaseController::class, 'destroy'])->name('releases.destroy');
+        Route::post('releases/{release}/services', [ReleaseController::class, 'syncServices'])->name('releases.services.sync');
         Route::post('releases/{release}/submit', [ReleaseController::class, 'submit'])->name('releases.submit');
 
         // Tracks (nested under releases)

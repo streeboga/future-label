@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\DataTransferObjects\Contract\CreateContractData;
 use App\Enums\ContractStatus;
+use App\Events\ContractGenerated;
 use App\Models\Contract;
 use App\Models\Release;
 use App\Models\User;
@@ -20,6 +21,7 @@ final readonly class ContractService
 {
     public function __construct(
         private ContractRepositoryInterface $repository,
+        private ReleaseService $releaseService,
     ) {}
 
     public function generate(User $user, Release $release, CreateContractData $data): Contract
@@ -39,7 +41,7 @@ final readonly class ContractService
         }
 
         /** @var Contract */
-        return DB::transaction(function () use ($user, $release, $data): Contract {
+        $contract = DB::transaction(function () use ($user, $release, $data): Contract {
             $contract = $this->repository->create([
                 'user_id' => $user->id,
                 'release_id' => $release->id,
@@ -51,6 +53,10 @@ final readonly class ContractService
 
             return $this->repository->update($contract, ['pdf_url' => $pdfUrl]);
         });
+
+        ContractGenerated::dispatch($user, $release, $contract->pdf_url ?? '');
+
+        return $contract;
     }
 
     public function accept(Contract $contract, string $ip, string $userAgent): Contract
@@ -62,12 +68,17 @@ final readonly class ContractService
         }
 
         /** @var Contract */
-        return DB::transaction(fn (): Contract => $this->repository->update($contract, [
+        $contract = DB::transaction(fn (): Contract => $this->repository->update($contract, [
             'status' => ContractStatus::Accepted,
             'accepted_at' => now(),
             'accepted_ip' => $ip,
             'accepted_user_agent' => $userAgent,
         ]));
+
+        // Transition release: AwaitingContract → InReview
+        $this->releaseService->transitionAfterContract($contract->release);
+
+        return $contract;
     }
 
     public function findByKey(string $key): Contract

@@ -7,9 +7,10 @@ namespace App\Services;
 use App\DataTransferObjects\Release\CreateReleaseData;
 use App\DataTransferObjects\Release\UpdateReleaseData;
 use App\Enums\ReleaseStatus;
+use App\Events\ReleaseStatusChanged;
+use App\Events\ReleaseSubmittedForReview;
 use App\Models\Release;
 use App\Models\User;
-use App\Repositories\Contracts\ContractRepositoryInterface;
 use App\Repositories\Contracts\ReleaseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,6 @@ final readonly class ReleaseService
 {
     public function __construct(
         private ReleaseRepositoryInterface $repository,
-        private ContractRepositoryInterface $contractRepository,
     ) {}
 
     public function create(User $user, CreateReleaseData $data): Release
@@ -99,8 +99,14 @@ final readonly class ReleaseService
             ]);
         }
 
+        $oldStatus = $release->status;
+
         /** @var Release */
-        return DB::transaction(fn (): Release => $this->repository->updateStatus($release, ReleaseStatus::Approved));
+        $release = DB::transaction(fn (): Release => $this->repository->updateStatus($release, ReleaseStatus::Approved));
+
+        ReleaseStatusChanged::dispatch($release, $oldStatus, ReleaseStatus::Approved);
+
+        return $release;
     }
 
     public function reject(Release $release, string $reason): Release
@@ -111,13 +117,19 @@ final readonly class ReleaseService
             ]);
         }
 
+        $oldStatus = $release->status;
+
         /** @var Release */
-        return DB::transaction(function () use ($release, $reason): Release {
+        $release = DB::transaction(function () use ($release, $reason): Release {
             $release->reject_reason = $reason;
             $release->save();
 
             return $this->repository->updateStatus($release, ReleaseStatus::Rejected);
         });
+
+        ReleaseStatusChanged::dispatch($release, $oldStatus, ReleaseStatus::Rejected);
+
+        return $release;
     }
 
     public function publish(Release $release): Release
@@ -128,15 +140,25 @@ final readonly class ReleaseService
             ]);
         }
 
+        $oldStatus = $release->status;
+
         /** @var Release */
-        return DB::transaction(function () use ($release): Release {
+        $release = DB::transaction(function () use ($release): Release {
             $release->published_at = now();
             $release->save();
 
             return $this->repository->updateStatus($release, ReleaseStatus::Published);
         });
+
+        ReleaseStatusChanged::dispatch($release, $oldStatus, ReleaseStatus::Published);
+
+        return $release;
     }
 
+    /**
+     * Submit release — transitions Draft → InReview.
+     * Payment and contracts are handled separately (invoiced manually for now).
+     */
     public function submit(Release $release): Release
     {
         if ($release->status !== ReleaseStatus::Draft && $release->status !== ReleaseStatus::Rejected) {
@@ -145,17 +167,11 @@ final readonly class ReleaseService
             ]);
         }
 
+        $oldStatus = $release->status;
+
         // If rejected, first transition back to draft
         if ($release->status === ReleaseStatus::Rejected) {
             $release = $this->repository->updateStatus($release, ReleaseStatus::Draft);
-        }
-
-        // Check for accepted contract before allowing submission
-        $acceptedContract = $this->contractRepository->findAcceptedForRelease($release->id);
-        if ($acceptedContract === null) {
-            throw ValidationException::withMessages([
-                'contract' => ['Release cannot be submitted without an accepted contract.'],
-            ]);
         }
 
         $targetStatus = ReleaseStatus::InReview;
@@ -167,12 +183,77 @@ final readonly class ReleaseService
         }
 
         /** @var Release */
-        return DB::transaction(function () use ($release, $targetStatus): Release {
+        $release = DB::transaction(function () use ($release, $targetStatus): Release {
             $release->submitted_at = now();
             $release->reject_reason = null;
             $release->save();
 
             return $this->repository->updateStatus($release, $targetStatus);
         });
+
+        ReleaseSubmittedForReview::dispatch($release);
+        ReleaseStatusChanged::dispatch($release, $oldStatus, $targetStatus);
+
+        return $release;
+    }
+
+    /**
+     * Transition release after payment is confirmed.
+     * AwaitingPayment → AwaitingContract.
+     */
+    public function transitionAfterPayment(Release $release): Release
+    {
+        if ($release->status !== ReleaseStatus::AwaitingPayment) {
+            return $release;
+        }
+
+        $oldStatus = $release->status;
+        $targetStatus = ReleaseStatus::AwaitingContract;
+
+        /** @var Release */
+        $release = DB::transaction(fn (): Release => $this->repository->updateStatus($release, $targetStatus));
+
+        ReleaseStatusChanged::dispatch($release, $oldStatus, $targetStatus);
+
+        return $release;
+    }
+
+    /**
+     * Transition release after contract is accepted.
+     * AwaitingContract → InReview.
+     */
+    public function transitionAfterContract(Release $release): Release
+    {
+        if ($release->status !== ReleaseStatus::AwaitingContract) {
+            return $release;
+        }
+
+        $oldStatus = $release->status;
+        $targetStatus = ReleaseStatus::InReview;
+
+        /** @var Release */
+        $release = DB::transaction(fn (): Release => $this->repository->updateStatus($release, $targetStatus));
+
+        ReleaseStatusChanged::dispatch($release, $oldStatus, $targetStatus);
+
+        return $release;
+    }
+
+    /**
+     * Attach services to a release.
+     *
+     * @param  array<int, int>  $serviceIds
+     */
+    public function syncServices(Release $release, array $serviceIds): Release
+    {
+        if ($release->status !== ReleaseStatus::Draft && $release->status !== ReleaseStatus::Rejected) {
+            throw ValidationException::withMessages([
+                'status' => ['Services can only be modified on draft or rejected releases.'],
+            ]);
+        }
+
+        DB::transaction(fn () => $release->services()->sync($serviceIds));
+
+        return $release->load('services');
     }
 }

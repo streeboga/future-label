@@ -20,12 +20,12 @@ export const Route = createFileRoute('/reset-password')({
 
 const resetSchema = z
   .object({
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
+    email: z.string().email('Некорректный email'),
+    password: z.string().min(8, 'Пароль минимум 8 символов'),
     password_confirmation: z.string(),
   })
   .refine((data) => data.password === data.password_confirmation, {
-    message: 'Passwords do not match',
+    message: 'Пароли не совпадают',
     path: ['password_confirmation'],
   });
 
@@ -67,7 +67,7 @@ function ResetPasswordPage() {
         }
       } else {
         setServerError(
-          axiosError.response?.data?.message ?? 'Failed to reset password. The link may have expired.',
+          axiosError.response?.data?.message ?? 'Не удалось сбросить пароль. Ссылка могла истечь.',
         );
       }
     }
@@ -75,10 +75,10 @@ function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <AuthLayout title="Invalid link" description="This password reset link is invalid or has expired.">
+      <AuthLayout title="Недействительная ссылка" description="Эта ссылка для сброса пароля недействительна или истекла.">
         <div className="text-center">
           <Link to="/forgot-password" className="font-medium text-foreground underline underline-offset-4 hover:text-accent">
-            Request a new reset link
+            Запросить новую ссылку
           </Link>
         </div>
       </AuthLayout>
@@ -87,11 +87,11 @@ function ResetPasswordPage() {
 
   return (
     <AuthLayout
-      title="Set new password"
-      description="Enter your new password below"
+      title="Новый пароль"
+      description="Введите новый пароль"
       footer={
         <Link to="/login" className="font-medium text-foreground underline underline-offset-4 hover:text-accent">
-          Back to sign in
+          Назад к входу
         </Link>
       }
     >
@@ -118,11 +118,11 @@ function ResetPasswordPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password">New password</Label>
+          <Label htmlFor="password">Новый пароль</Label>
           <Input
             id="password"
             type="password"
-            placeholder="Min. 8 characters"
+            placeholder="Мин. 8 символов"
             autoComplete="new-password"
             aria-invalid={!!errors.password}
             {...register('password')}
@@ -133,11 +133,11 @@ function ResetPasswordPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password_confirmation">Confirm password</Label>
+          <Label htmlFor="password_confirmation">Подтвердите пароль</Label>
           <Input
             id="password_confirmation"
             type="password"
-            placeholder="Repeat password"
+            placeholder="Повторите пароль"
             autoComplete="new-password"
             aria-invalid={!!errors.password_confirmation}
             {...register('password_confirmation')}
@@ -148,7 +148,7 @@ function ResetPasswordPage() {
         </div>
 
         <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Resetting...' : 'Reset password'}
+          {isSubmitting ? 'Сброс...' : 'Сбросить пароль'}
         </Button>
       </form>
     </AuthLayout>

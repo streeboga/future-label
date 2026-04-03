@@ -281,7 +281,7 @@ it('processes webhook and updates payment status to paid', function (): void {
     ]);
 });
 
-it('transitions release to in_review after successful payment', function (): void {
+it('transitions release to awaiting_contract after successful payment', function (): void {
     $release = Release::factory()->awaitingPayment()->create();
     $payment = Payment::factory()->processing()->online()->create([
         'user_id' => $release->user_id,
@@ -297,7 +297,7 @@ it('transitions release to in_review after successful payment', function (): voi
     ]);
 
     $release->refresh();
-    expect($release->status)->toBe(ReleaseStatus::InReview);
+    expect($release->status)->toBe(ReleaseStatus::AwaitingContract);
 });
 
 it('rejects webhook with invalid signature', function (): void {
@@ -390,7 +390,7 @@ it('allows admin to confirm a manual pending payment', function (): void {
     $response->assertJsonPath('data.attributes.status', 'confirmed');
 });
 
-it('transitions release to in_review after manual payment confirmation', function (): void {
+it('transitions release to awaiting_contract after manual payment confirmation', function (): void {
     $manager = User::factory()->manager()->create();
     $release = Release::factory()->awaitingPayment()->create();
     $payment = Payment::factory()->manual()->pending()->create([
@@ -401,7 +401,7 @@ it('transitions release to in_review after manual payment confirmation', functio
     $this->actingAs($manager)->patchJson("/api/v1/admin/payments/{$payment->key}/confirm");
 
     $release->refresh();
-    expect($release->status)->toBe(ReleaseStatus::InReview);
+    expect($release->status)->toBe(ReleaseStatus::AwaitingContract);
 });
 
 it('rejects confirming an online payment', function (): void {

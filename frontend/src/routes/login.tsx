@@ -20,8 +20,8 @@ export const Route = createFileRoute('/login')({
 });
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Некорректный email'),
+  password: z.string().min(1, 'Введите пароль'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -58,20 +58,20 @@ function LoginPage() {
     } catch (err) {
       const axiosError = err as AxiosError<ApiError>;
       setServerError(
-        axiosError.response?.data?.message ?? 'Invalid credentials. Please try again.',
+        axiosError.response?.data?.message ?? 'Неверные учётные данные. Попробуйте ещё раз.',
       );
     }
   };
 
   return (
     <AuthLayout
-      title="Welcome back"
-      description="Sign in to your account"
+      title="С возвращением"
+      description="Войдите в свой аккаунт"
       footer={
         <span>
-          Don't have an account?{' '}
+          Нет аккаунта?{' '}
           <Link to="/register" className="font-medium text-foreground underline underline-offset-4 hover:text-accent">
-            Sign up
+            Зарегистрироваться
           </Link>
         </span>
       }
@@ -79,7 +79,7 @@ function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         {registered && (
           <div className="rounded-md border border-accent/50 bg-accent/10 px-3 py-2 text-sm text-accent">
-            Registration successful. Please check your email to verify your account, then sign in.
+            Регистрация прошла успешно. Проверьте email для подтверждения и войдите.
           </div>
         )}
 
@@ -106,18 +106,18 @@ function LoginPage() {
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Пароль</Label>
             <Link
               to="/forgot-password"
               className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
-              Forgot password?
+              Забыли пароль?
             </Link>
           </div>
           <Input
             id="password"
             type="password"
-            placeholder="Enter your password"
+            placeholder="Введите пароль"
             autoComplete="current-password"
             aria-invalid={!!errors.password}
             {...register('password')}
@@ -128,7 +128,7 @@ function LoginPage() {
         </div>
 
         <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Signing in...' : 'Sign in'}
+          {isSubmitting ? 'Вход...' : 'Войти'}
         </Button>
       </form>
     </AuthLayout>

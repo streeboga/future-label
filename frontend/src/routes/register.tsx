@@ -16,13 +16,13 @@ export const Route = createFileRoute('/register')({
 
 const registerSchema = z
   .object({
-    name: z.string().min(1, 'Name is required'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
+    name: z.string().min(1, 'Введите имя'),
+    email: z.string().email('Некорректный email'),
+    password: z.string().min(8, 'Пароль минимум 8 символов'),
     password_confirmation: z.string(),
   })
   .refine((data) => data.password === data.password_confirmation, {
-    message: 'Passwords do not match',
+    message: 'Пароли не совпадают',
     path: ['password_confirmation'],
   });
 
@@ -67,7 +67,7 @@ function RegisterPage() {
         }
       } else {
         setServerError(
-          axiosError.response?.data?.message ?? 'Registration failed. Please try again.',
+          axiosError.response?.data?.message ?? 'Ошибка регистрации. Попробуйте ещё раз.',
         );
       }
     }
@@ -75,13 +75,13 @@ function RegisterPage() {
 
   return (
     <AuthLayout
-      title="Create an account"
-      description="Enter your details to get started"
+      title="Создать аккаунт"
+      description="Заполните данные для регистрации"
       footer={
         <span>
-          Already have an account?{' '}
+          Уже есть аккаунт?{' '}
           <Link to="/login" className="font-medium text-foreground underline underline-offset-4 hover:text-accent">
-            Sign in
+            Войти
           </Link>
         </span>
       }
@@ -94,10 +94,10 @@ function RegisterPage() {
         )}
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">Имя</Label>
           <Input
             id="name"
-            placeholder="John Doe"
+            placeholder="Иван Иванов"
             autoComplete="name"
             aria-invalid={!!errors.name}
             {...register('name')}
@@ -123,11 +123,11 @@ function RegisterPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Пароль</Label>
           <Input
             id="password"
             type="password"
-            placeholder="Min. 8 characters"
+            placeholder="Мин. 8 символов"
             autoComplete="new-password"
             aria-invalid={!!errors.password}
             {...register('password')}
@@ -138,11 +138,11 @@ function RegisterPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password_confirmation">Confirm password</Label>
+          <Label htmlFor="password_confirmation">Подтвердите пароль</Label>
           <Input
             id="password_confirmation"
             type="password"
-            placeholder="Repeat password"
+            placeholder="Повторите пароль"
             autoComplete="new-password"
             aria-invalid={!!errors.password_confirmation}
             {...register('password_confirmation')}
@@ -153,7 +153,7 @@ function RegisterPage() {
         </div>
 
         <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Creating account...' : 'Create account'}
+          {isSubmitting ? 'Создание...' : 'Создать аккаунт'}
         </Button>
       </form>
     </AuthLayout>

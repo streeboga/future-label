@@ -99,3 +99,36 @@ export function useDeleteTrack() {
   });
 }
 
+export function useUploadCover() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ releaseKey, file }: { releaseKey: string; file: File }) =>
+      releasesService.uploadCover(releaseKey, file),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['releases'] });
+    },
+  });
+}
+
+export function useSyncServices() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ releaseKey, serviceKeys }: { releaseKey: string; serviceKeys: string[] }) =>
+      releasesService.syncServices(releaseKey, serviceKeys),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['releases'] });
+    },
+  });
+}
+
+export function useInitiatePayment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ releaseKey, method }: { releaseKey: string; method: 'online' | 'manual' }) =>
+      releasesService.initiatePayment(releaseKey, method),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['releases'] });
+    },
+  });
+}
+

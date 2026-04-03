@@ -37,13 +37,33 @@ final class TrackController extends Controller
     /**
      * Add a track to a release
      *
-     * Creates a new track record for the release.
+     * Creates a new track record for the release. Accepts multipart/form-data with an audio file.
      */
     public function store(StoreTrackRequest $request, Release $release): JsonResponse
     {
         Gate::authorize('create', [Track::class, $release]);
 
-        $track = $this->service->create($release, $request->toDto());
+        $dto = $request->toDto();
+
+        // Handle file upload
+        $uploadedFile = $request->file('file');
+        if ($uploadedFile instanceof \Illuminate\Http\UploadedFile) {
+            $path = $uploadedFile->store("tracks/{$release->key}", 'public');
+            $dto = new \App\DataTransferObjects\Track\CreateTrackData(
+                title: $dto->title,
+                format: $dto->format,
+                track_number: $dto->track_number,
+                duration_seconds: $dto->duration_seconds,
+                file_url: $path !== false ? "/storage/{$path}" : $dto->file_url,
+                file_size: (int) $uploadedFile->getSize(),
+                authors: $dto->authors,
+                composers: $dto->composers,
+                lyrics: $dto->lyrics,
+                isrc: $dto->isrc,
+            );
+        }
+
+        $track = $this->service->create($release, $dto);
 
         $track->setRelation('release', $release);
 

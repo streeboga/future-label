@@ -161,6 +161,9 @@ function ReleaseDetail() {
             <p className="text-sm font-medium text-red-700">
               Релиз был отклонён модератором
             </p>
+            {release.reject_reason && (
+              <p className="mt-1 text-sm text-red-600">{release.reject_reason}</p>
+            )}
           </CardContent>
         </Card>
       )}
