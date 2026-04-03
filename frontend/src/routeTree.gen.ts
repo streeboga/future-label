@@ -21,6 +21,16 @@ import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin/index'
+import { Route as AuthenticatedDashboardContractsRouteImport } from './routes/_authenticated/dashboard/contracts'
+import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin/services'
+import { Route as AdminAdminReleasesRouteImport } from './routes/_admin/admin/releases'
+import { Route as AdminAdminOrdersRouteImport } from './routes/_admin/admin/orders'
+import { Route as AdminAdminArtistsRouteImport } from './routes/_admin/admin/artists'
+import { Route as AuthenticatedDashboardReleasesNewRouteImport } from './routes/_authenticated/dashboard/releases/new'
+import { Route as AuthenticatedDashboardReleasesKeyRouteImport } from './routes/_authenticated/dashboard/releases/$key'
+import { Route as AdminAdminReleasesKeyRouteImport } from './routes/_admin/admin/releases.$key'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -79,6 +89,60 @@ const AdminAdminRoute = AdminAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AdminRoute,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AuthenticatedDashboardContractsRoute =
+  AuthenticatedDashboardContractsRouteImport.update({
+    id: '/contracts',
+    path: '/contracts',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AdminAdminServicesRoute = AdminAdminServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminReleasesRoute = AdminAdminReleasesRouteImport.update({
+  id: '/releases',
+  path: '/releases',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminOrdersRoute = AdminAdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminArtistsRoute = AdminAdminArtistsRouteImport.update({
+  id: '/artists',
+  path: '/artists',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AuthenticatedDashboardReleasesNewRoute =
+  AuthenticatedDashboardReleasesNewRouteImport.update({
+    id: '/releases/new',
+    path: '/releases/new',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardReleasesKeyRoute =
+  AuthenticatedDashboardReleasesKeyRouteImport.update({
+    id: '/releases/$key',
+    path: '/releases/$key',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AdminAdminReleasesKeyRoute = AdminAdminReleasesKeyRouteImport.update({
+  id: '/$key',
+  path: '/$key',
+  getParentRoute: () => AdminAdminReleasesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -86,10 +150,20 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin': typeof AdminAdminRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin': typeof AdminAdminRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/about': typeof PublicAboutRoute
   '/pricing': typeof PublicPricingRoute
+  '/admin/artists': typeof AdminAdminArtistsRoute
+  '/admin/orders': typeof AdminAdminOrdersRoute
+  '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/admin/services': typeof AdminAdminServicesRoute
+  '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/admin/': typeof AdminAdminIndexRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
+  '/dashboard/releases/$key': typeof AuthenticatedDashboardReleasesKeyRoute
+  '/dashboard/releases/new': typeof AuthenticatedDashboardReleasesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -97,10 +171,18 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin': typeof AdminAdminRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
   '/about': typeof PublicAboutRoute
   '/pricing': typeof PublicPricingRoute
+  '/admin/artists': typeof AdminAdminArtistsRoute
+  '/admin/orders': typeof AdminAdminOrdersRoute
+  '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/admin/services': typeof AdminAdminServicesRoute
+  '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/admin': typeof AdminAdminIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
+  '/dashboard/releases/$key': typeof AuthenticatedDashboardReleasesKeyRoute
+  '/dashboard/releases/new': typeof AuthenticatedDashboardReleasesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -111,11 +193,21 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_admin/admin': typeof AdminAdminRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_admin/admin': typeof AdminAdminRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
   '/_public/pricing': typeof PublicPricingRoute
   '/_public/': typeof PublicIndexRoute
+  '/_admin/admin/artists': typeof AdminAdminArtistsRoute
+  '/_admin/admin/orders': typeof AdminAdminOrdersRoute
+  '/_admin/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/_admin/admin/services': typeof AdminAdminServicesRoute
+  '/_authenticated/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_admin/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
+  '/_authenticated/dashboard/releases/$key': typeof AuthenticatedDashboardReleasesKeyRoute
+  '/_authenticated/dashboard/releases/new': typeof AuthenticatedDashboardReleasesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,6 +221,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/about'
     | '/pricing'
+    | '/admin/artists'
+    | '/admin/orders'
+    | '/admin/releases'
+    | '/admin/services'
+    | '/dashboard/contracts'
+    | '/admin/'
+    | '/dashboard/'
+    | '/admin/releases/$key'
+    | '/dashboard/releases/$key'
+    | '/dashboard/releases/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -136,10 +238,18 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/reset-password'
-    | '/admin'
-    | '/dashboard'
     | '/about'
     | '/pricing'
+    | '/admin/artists'
+    | '/admin/orders'
+    | '/admin/releases'
+    | '/admin/services'
+    | '/dashboard/contracts'
+    | '/admin'
+    | '/dashboard'
+    | '/admin/releases/$key'
+    | '/dashboard/releases/$key'
+    | '/dashboard/releases/new'
   id:
     | '__root__'
     | '/_admin'
@@ -154,6 +264,16 @@ export interface FileRouteTypes {
     | '/_public/about'
     | '/_public/pricing'
     | '/_public/'
+    | '/_admin/admin/artists'
+    | '/_admin/admin/orders'
+    | '/_admin/admin/releases'
+    | '/_admin/admin/services'
+    | '/_authenticated/dashboard/contracts'
+    | '/_admin/admin/'
+    | '/_authenticated/dashboard/'
+    | '/_admin/admin/releases/$key'
+    | '/_authenticated/dashboard/releases/$key'
+    | '/_authenticated/dashboard/releases/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -252,25 +372,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_authenticated/dashboard/contracts': {
+      id: '/_authenticated/dashboard/contracts'
+      path: '/contracts'
+      fullPath: '/dashboard/contracts'
+      preLoaderRoute: typeof AuthenticatedDashboardContractsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_admin/admin/services': {
+      id: '/_admin/admin/services'
+      path: '/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminAdminServicesRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/releases': {
+      id: '/_admin/admin/releases'
+      path: '/releases'
+      fullPath: '/admin/releases'
+      preLoaderRoute: typeof AdminAdminReleasesRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/orders': {
+      id: '/_admin/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminAdminOrdersRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/artists': {
+      id: '/_admin/admin/artists'
+      path: '/artists'
+      fullPath: '/admin/artists'
+      preLoaderRoute: typeof AdminAdminArtistsRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_authenticated/dashboard/releases/new': {
+      id: '/_authenticated/dashboard/releases/new'
+      path: '/releases/new'
+      fullPath: '/dashboard/releases/new'
+      preLoaderRoute: typeof AuthenticatedDashboardReleasesNewRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/releases/$key': {
+      id: '/_authenticated/dashboard/releases/$key'
+      path: '/releases/$key'
+      fullPath: '/dashboard/releases/$key'
+      preLoaderRoute: typeof AuthenticatedDashboardReleasesKeyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_admin/admin/releases/$key': {
+      id: '/_admin/admin/releases/$key'
+      path: '/$key'
+      fullPath: '/admin/releases/$key'
+      preLoaderRoute: typeof AdminAdminReleasesKeyRouteImport
+      parentRoute: typeof AdminAdminReleasesRoute
+    }
   }
 }
 
+interface AdminAdminReleasesRouteChildren {
+  AdminAdminReleasesKeyRoute: typeof AdminAdminReleasesKeyRoute
+}
+
+const AdminAdminReleasesRouteChildren: AdminAdminReleasesRouteChildren = {
+  AdminAdminReleasesKeyRoute: AdminAdminReleasesKeyRoute,
+}
+
+const AdminAdminReleasesRouteWithChildren =
+  AdminAdminReleasesRoute._addFileChildren(AdminAdminReleasesRouteChildren)
+
+interface AdminAdminRouteChildren {
+  AdminAdminArtistsRoute: typeof AdminAdminArtistsRoute
+  AdminAdminOrdersRoute: typeof AdminAdminOrdersRoute
+  AdminAdminReleasesRoute: typeof AdminAdminReleasesRouteWithChildren
+  AdminAdminServicesRoute: typeof AdminAdminServicesRoute
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+}
+
+const AdminAdminRouteChildren: AdminAdminRouteChildren = {
+  AdminAdminArtistsRoute: AdminAdminArtistsRoute,
+  AdminAdminOrdersRoute: AdminAdminOrdersRoute,
+  AdminAdminReleasesRoute: AdminAdminReleasesRouteWithChildren,
+  AdminAdminServicesRoute: AdminAdminServicesRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
+}
+
+const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
+  AdminAdminRouteChildren,
+)
+
 interface AdminRouteChildren {
-  AdminAdminRoute: typeof AdminAdminRoute
+  AdminAdminRoute: typeof AdminAdminRouteWithChildren
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminAdminRoute: AdminAdminRoute,
+  AdminAdminRoute: AdminAdminRouteWithChildren,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardContractsRoute: typeof AuthenticatedDashboardContractsRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardReleasesKeyRoute: typeof AuthenticatedDashboardReleasesKeyRoute
+  AuthenticatedDashboardReleasesNewRoute: typeof AuthenticatedDashboardReleasesNewRoute
+}
+
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
+  {
+    AuthenticatedDashboardContractsRoute: AuthenticatedDashboardContractsRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+    AuthenticatedDashboardReleasesKeyRoute:
+      AuthenticatedDashboardReleasesKeyRoute,
+    AuthenticatedDashboardReleasesNewRoute:
+      AuthenticatedDashboardReleasesNewRoute,
+  }
+
+const AuthenticatedDashboardRouteWithChildren =
+  AuthenticatedDashboardRoute._addFileChildren(
+    AuthenticatedDashboardRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
