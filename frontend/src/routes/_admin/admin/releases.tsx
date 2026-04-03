@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useAdminReleases, useModerateRelease } from '@/hooks/use-admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,6 +45,7 @@ function AdminReleases() {
     page,
   });
 
+  const navigate = useNavigate();
   const moderateRelease = useModerateRelease();
 
   const [moderationModal, setModerationModal] = useState<{
@@ -149,15 +150,13 @@ function AdminReleases() {
                   </TableHeader>
                   <TableBody>
                     {releases.map((release) => (
-                      <TableRow key={release.key}>
-                        <TableCell>
-                          <Link
-                            to="/admin/releases/$key"
-                            params={{ key: release.key }}
-                            className="text-sm font-medium hover:underline"
-                          >
-                            {release.title}
-                          </Link>
+                      <TableRow
+                        key={release.key}
+                        className="cursor-pointer"
+                        onClick={() => void navigate({ to: '/admin/releases/$key', params: { key: release.key } })}
+                      >
+                        <TableCell className="text-sm font-medium">
+                          {release.title}
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
                           {release.artist_name}
@@ -173,7 +172,7 @@ function AdminReleases() {
                         </TableCell>
                         <TableCell>
                           {release.status === 'in_review' && (
-                            <div className="flex gap-1">
+                            <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -197,16 +196,18 @@ function AdminReleases() {
                             </div>
                           )}
                           {release.status === 'approved' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700"
-                              onClick={() =>
-                                setModerationModal({ key: release.key, action: 'publish' })
-                              }
-                            >
-                              <Globe className="h-4 w-4" />
-                            </Button>
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700"
+                                onClick={() =>
+                                  setModerationModal({ key: release.key, action: 'publish' })
+                                }
+                              >
+                                <Globe className="h-4 w-4" />
+                              </Button>
+                            </div>
                           )}
                         </TableCell>
                       </TableRow>

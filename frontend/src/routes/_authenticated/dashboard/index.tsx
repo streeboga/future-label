@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useReleases } from '@/hooks/use-releases';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ export const Route = createFileRoute('/_authenticated/dashboard/')({
 });
 
 function DashboardIndex() {
+  const navigate = useNavigate();
   const { data: releasesData, isLoading: releasesLoading } = useReleases();
 
   const releases = releasesData?.data ?? [];
@@ -82,30 +83,26 @@ function DashboardIndex() {
                 </TableHeader>
                 <TableBody>
                   {releases.map((release) => (
-                    <TableRow key={release.key} className="cursor-pointer">
+                    <TableRow
+                      key={release.key}
+                      className="cursor-pointer"
+                      onClick={() => void navigate({ to: '/dashboard/releases/$key', params: { key: release.key } })}
+                    >
                       <TableCell>
-                        <Link to="/dashboard/releases/$key" params={{ key: release.key }}>
-                          {release.cover_url ? (
-                            <img
-                              src={release.cover_url}
-                              alt=""
-                              className="h-9 w-9 rounded object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-9 w-9 items-center justify-center rounded bg-muted">
-                              <Disc3 className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                          )}
-                        </Link>
+                        {release.cover_url ? (
+                          <img
+                            src={release.cover_url}
+                            alt=""
+                            className="h-9 w-9 rounded object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-9 w-9 items-center justify-center rounded bg-muted">
+                            <Disc3 className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                        )}
                       </TableCell>
-                      <TableCell>
-                        <Link
-                          to="/dashboard/releases/$key"
-                          params={{ key: release.key }}
-                          className="text-sm font-medium hover:underline"
-                        >
-                          {release.title}
-                        </Link>
+                      <TableCell className="text-sm font-medium">
+                        {release.title}
                       </TableCell>
                       <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
                         {release.artist_name}
