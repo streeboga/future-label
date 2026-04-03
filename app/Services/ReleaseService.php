@@ -9,6 +9,7 @@ use App\DataTransferObjects\Release\UpdateReleaseData;
 use App\Enums\ReleaseStatus;
 use App\Models\Release;
 use App\Models\User;
+use App\Repositories\Contracts\ContractRepositoryInterface;
 use App\Repositories\Contracts\ReleaseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ final readonly class ReleaseService
 {
     public function __construct(
         private ReleaseRepositoryInterface $repository,
+        private ContractRepositoryInterface $contractRepository,
     ) {}
 
     public function create(User $user, CreateReleaseData $data): Release
@@ -102,8 +104,14 @@ final readonly class ReleaseService
             $release = $this->repository->updateStatus($release, ReleaseStatus::Draft);
         }
 
-        // Determine transition target based on conditions
-        // For simplicity: go directly to InReview (real logic would check payment/contract)
+        // Check for accepted contract before allowing submission
+        $acceptedContract = $this->contractRepository->findAcceptedForRelease($release->id);
+        if ($acceptedContract === null) {
+            throw ValidationException::withMessages([
+                'contract' => ['Release cannot be submitted without an accepted contract.'],
+            ]);
+        }
+
         $targetStatus = ReleaseStatus::InReview;
 
         if (! $release->status->canTransitionTo($targetStatus)) {

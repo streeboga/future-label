@@ -38,6 +38,7 @@ use Illuminate\Support\Str;
  * @property-read User $user
  * @property-read Collection<int, Track> $tracks
  * @property-read Collection<int, ServiceCatalog> $services
+ * @property-read Collection<int, Contract> $contracts
  */
 class Release extends Model
 {
@@ -114,5 +115,13 @@ class Release extends Model
     {
         return $this->belongsToMany(ServiceCatalog::class, 'release_services', 'release_id', 'service_id')
             ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<Contract, $this>
+     */
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class);
     }
 }

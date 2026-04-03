@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\ReleaseStatus;
 use App\Http\Controllers\Api\V1\ReleaseController;
+use App\Models\Contract;
 use App\Models\Release;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -399,6 +400,10 @@ it('forbids artist from deleting another user release', function (): void {
 it('submits a draft release and transitions to in_review', function (): void {
     $user = User::factory()->artist()->create();
     $release = Release::factory()->draft()->create(['user_id' => $user->id]);
+    Contract::factory()->accepted()->create([
+        'user_id' => $user->id,
+        'release_id' => $release->id,
+    ]);
 
     $response = $this->actingAs($user)->postJson("/api/v1/releases/{$release->key}/submit");
 
@@ -410,6 +415,10 @@ it('submits a draft release and transitions to in_review', function (): void {
 it('resubmits a rejected release (transition rejected → draft → in_review)', function (): void {
     $user = User::factory()->artist()->create();
     $release = Release::factory()->rejected()->create(['user_id' => $user->id]);
+    Contract::factory()->accepted()->create([
+        'user_id' => $user->id,
+        'release_id' => $release->id,
+    ]);
 
     $response = $this->actingAs($user)->postJson("/api/v1/releases/{$release->key}/submit");
 
