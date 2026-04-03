@@ -40,4 +40,11 @@ final class UserRepository implements UserRepositoryInterface
     {
         return User::create($data);
     }
+
+    public function updatePassword(User $user, string $password): void
+    {
+        $user->forceFill([
+            'password' => $password,
+        ])->save();
+    }
 }
