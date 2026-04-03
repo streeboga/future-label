@@ -25,6 +25,14 @@ final class UserRepository implements UserRepositoryInterface
         return $model;
     }
 
+    public function findByEmail(string $email): ?User
+    {
+        return UserQueryBuilder::make()
+            ->byEmail($email)
+            ->getQuery()
+            ->first();
+    }
+
     /**
      * @param  array<string, mixed>  $data
      */

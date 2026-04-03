@@ -10,6 +10,8 @@ interface UserRepositoryInterface
 {
     public function findByKey(string $key): User;
 
+    public function findByEmail(string $email): ?User;
+
     /**
      * @param  array<string, mixed>  $data
      */
