@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-final readonly class UserRegistered
+final class UserRegistered
 {
     use Dispatchable, SerializesModels;
 
