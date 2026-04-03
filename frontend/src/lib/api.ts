@@ -5,8 +5,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://future-label.test/a
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    Accept: 'application/vnd.api+json',
-    'Content-Type': 'application/vnd.api+json',
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
 });
 

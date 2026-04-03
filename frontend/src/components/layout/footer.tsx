@@ -21,30 +21,35 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t bg-secondary/50">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+    <footer style={{ borderTop: '0.5px solid #e5e5e3', backgroundColor: '#fafaf9' }}>
+      <div className="mx-auto max-w-[1120px] px-6 pb-10 pt-16">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
-              <span>Future</span>
-              <span className="inline-block h-2 w-2 rounded-full bg-primary" />
-              <span>Label</span>
+            <Link to="/" className="flex items-center gap-0.5 text-[17px] font-semibold tracking-[-0.02em]">
+              <span className="text-[#1a1a1a]">Future</span>
+              <span
+                className="mx-[3px] inline-block h-[7px] w-[7px] rounded-full"
+                style={{ backgroundColor: '#185FA5' }}
+              />
+              <span className="text-[#1a1a1a]">Label</span>
             </Link>
-            <p className="mt-3 text-sm text-muted-foreground">
+            <p className="mt-4 max-w-[240px] text-[13px] leading-[1.6] text-[#999]">
               Христианский музыкальный лейбл. Помогаем артистам делиться музыкой со всем миром.
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold">Продукт</h4>
-            <ul className="space-y-2">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+              Продукт
+            </h4>
+            <ul className="space-y-2.5">
               {footerLinks.product.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
                   >
                     {link.label}
                   </Link>
@@ -55,13 +60,15 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold">Компания</h4>
-            <ul className="space-y-2">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+              Компания
+            </h4>
+            <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
                   >
                     {link.label}
                   </Link>
@@ -72,13 +79,15 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold">Документы</h4>
-            <ul className="space-y-2">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+              Документы
+            </h4>
+            <ul className="space-y-2.5">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
                   >
                     {link.label}
                   </Link>
@@ -88,8 +97,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t pt-6">
-          <p className="text-center text-sm text-muted-foreground">
+        <div className="mt-14" style={{ borderTop: '0.5px solid #e5e5e3' }}>
+          <p className="pt-6 text-center text-[13px] text-[#999]">
             &copy; {new Date().getFullYear()} Future Label. Все права защищены.
           </p>
         </div>
