@@ -47,4 +47,15 @@ final class UserRepository implements UserRepositoryInterface
             'password' => $password,
         ])->save();
     }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function update(User $user, array $data): User
+    {
+        $user->fill($data);
+        $user->save();
+
+        return $user->refresh();
+    }
 }

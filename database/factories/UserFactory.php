@@ -25,7 +25,12 @@ final class UserFactory extends Factory
         return [
             'key' => 'usr_'.Str::ulid(),
             'name' => fake()->name(),
+            'stage_name' => null,
             'email' => fake()->unique()->safeEmail(),
+            'phone' => null,
+            'telegram' => null,
+            'passport_data' => null,
+            'bank_details' => null,
             'email_verified_at' => now(),
             'password' => self::$password ??= Hash::make('password'),
             'role' => UserRole::Artist,

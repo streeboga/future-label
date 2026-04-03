@@ -18,4 +18,9 @@ interface UserRepositoryInterface
     public function create(array $data): User;
 
     public function updatePassword(User $user, string $password): void;
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function update(User $user, array $data): User;
 }

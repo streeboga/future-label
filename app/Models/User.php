@@ -10,9 +10,26 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property int $id
+ * @property string $key
+ * @property string $name
+ * @property string|null $stage_name
+ * @property string $email
+ * @property string|null $phone
+ * @property string|null $telegram
+ * @property string|null $passport_data
+ * @property string|null $bank_details
+ * @property UserRole $role
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -21,7 +38,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'key',
         'name',
+        'stage_name',
         'email',
+        'phone',
+        'telegram',
+        'passport_data',
+        'bank_details',
         'password',
         'role',
     ];
@@ -29,6 +51,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'passport_data',
+        'bank_details',
     ];
 
     /**
@@ -40,6 +64,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'passport_data' => 'encrypted',
+            'bank_details' => 'encrypted',
         ];
     }
 

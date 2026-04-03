@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
@@ -19,13 +20,23 @@ final class UserResource extends JsonApiResource
      */
     public function toAttributes(Request $request): array
     {
-        return [
+        $attributes = [
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->resource->role->value,
+            'stage_name' => $this->stage_name,
+            'phone' => $this->phone,
+            'telegram' => $this->telegram,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
+
+        if ($this->canViewPii($request)) {
+            $attributes['passport_data'] = $this->passport_data;
+            $attributes['bank_details'] = $this->bank_details;
+        }
+
+        return $attributes;
     }
 
     /**
@@ -52,7 +63,19 @@ final class UserResource extends JsonApiResource
     public function toLinks(Request $request): array
     {
         return [
-            Link::self("/api/v1/users/{$this->key}"),
+            Link::self('/api/v1/profile'),
         ];
+    }
+
+    private function canViewPii(Request $request): bool
+    {
+        $authUser = $request->user();
+
+        if (! $authUser instanceof User) {
+            return false;
+        }
+
+        return $authUser->id === $this->resource->id
+            || $authUser->role === UserRole::Admin;
     }
 }
