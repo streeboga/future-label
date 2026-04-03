@@ -12,9 +12,9 @@ const faqItems = [
       'Обычно релиз появляется на площадках в течение 2-5 рабочих дней после одобрения. Некоторые площадки, например Spotify и Apple Music, могут обработать релиз быстрее.',
   },
   {
-    question: 'Могу ли я загрузить музыку бесплатно?',
+    question: 'Какой процент роялти получает артист?',
     answer:
-      'Да, у нас есть бесплатный тариф, который позволяет загружать синглы на 50+ площадок. Вы получаете 85% от всех доходов.',
+      'В зависимости от тарифа артист получает от 85% до 95% всех доходов от стриминга. Мы предлагаем одни из лучших условий на рынке.',
   },
   {
     question: 'Как происходит выплата роялти?',
@@ -40,15 +40,15 @@ const faqItems = [
 
 export function Faq() {
   return (
-    <section className="px-6 py-16 md:py-[120px]">
+    <section id="faq" className="px-6 py-20 md:py-[100px]">
       <div className="mx-auto max-w-[700px]">
         <div className="mb-16 text-center">
-          <h2 className="text-[28px] font-semibold tracking-[-0.02em] text-[#0f172a] md:text-[40px]">
+          <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.15em] text-[#7c3aed]">
+            FAQ
+          </p>
+          <h2 className="text-[28px] font-bold uppercase tracking-[-0.01em] text-[#0f0f0f] md:text-[42px]">
             Частые вопросы
           </h2>
-          <p className="mt-4 text-[18px] leading-[1.7] text-[#64748b]">
-            Ответы на популярные вопросы артистов
-          </p>
         </div>
 
         <Accordion type="single" collapsible className="w-full">
@@ -58,10 +58,10 @@ export function Faq() {
               value={`item-${index}`}
               className="border-b border-black/[0.06] py-1"
             >
-              <AccordionTrigger className="text-left text-[16px] font-medium text-[#0f172a] hover:no-underline">
+              <AccordionTrigger className="text-left text-[16px] font-semibold text-[#0f0f0f] hover:no-underline">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-[1.7] text-[#64748b]">
+              <AccordionContent className="text-[14px] leading-[1.7] text-[#6b7280]">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>

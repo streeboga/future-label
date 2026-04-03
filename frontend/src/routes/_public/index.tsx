@@ -5,12 +5,13 @@ import { Services } from '@/components/landing/services'
 import { Pricing } from '@/components/landing/pricing'
 import { WhyUs } from '@/components/landing/why-us'
 import { Faq } from '@/components/landing/faq'
+import { Cta } from '@/components/landing/cta'
 
 export const Route = createFileRoute('/_public/')({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: 'Future Label — Цифровая дистрибуция музыки' },
+      { title: 'Future Label — Христианский музыкальный лейбл' },
       {
         name: 'description',
         content:
@@ -29,6 +30,7 @@ function LandingPage() {
       <Pricing />
       <WhyUs />
       <Faq />
+      <Cta />
     </>
   )
 }

@@ -19,30 +19,50 @@ const footerLinks = {
   ],
 }
 
+const socialLinks = [
+  { label: 'Telegram', href: '#', icon: 'M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z' },
+  { label: 'Instagram', href: '#', icon: 'M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.882 0 1.441 1.441 0 012.882 0z' },
+  { label: 'YouTube', href: '#', icon: 'M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
+  { label: 'VK', href: '#', icon: 'M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 14.27h-1.71c-.65 0-.85-.52-2.01-1.7-1.02-.99-1.46-1.12-1.71-1.12-.35 0-.45.1-.45.58v1.56c0 .41-.13.66-1.21.66-1.79 0-3.78-1.09-5.18-3.11-2.1-2.97-2.68-5.2-2.68-5.65 0-.25.1-.48.58-.48h1.71c.43 0 .6.2.76.66.84 2.44 2.25 4.58 2.83 4.58.22 0 .32-.1.32-.65V9.52c-.07-1.11-.65-1.21-.65-1.61 0-.2.17-.4.44-.4h2.69c.36 0 .49.2.49.63v3.38c0 .36.16.49.26.49.22 0 .4-.13.81-.54 1.25-1.4 2.14-3.56 2.14-3.56.12-.25.32-.48.76-.48h1.71c.51 0 .63.27.51.63-.22 1.04-2.36 4.04-2.36 4.04-.19.3-.26.44 0 .78.19.25.81.78 1.23 1.25.76.85 1.34 1.57 1.5 2.06.17.49-.08.74-.56.74z' },
+]
+
 export function Footer() {
   return (
-    <footer className="border-t border-black/[0.06] bg-[#f8f9fa]">
+    <footer className="bg-[#0f0f0f]">
       <div className="mx-auto max-w-[1200px] px-6 pb-10 pt-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link
               to="/"
-              className="flex items-center gap-0.5 text-[16px] font-semibold tracking-[-0.02em] text-[#0f172a]"
+              className="text-[18px] font-extrabold uppercase tracking-[0.06em] text-white"
             >
-              Future
-              <span className="mx-[3px] inline-block h-[6px] w-[6px] rounded-full bg-[#2563eb]" />
-              Label
+              Future Label
             </Link>
-            <p className="mt-4 max-w-[240px] text-[13px] leading-[1.7] text-[#94a3b8]">
+            <p className="mt-4 max-w-[240px] text-[13px] leading-[1.7] text-white/40">
               Христианский музыкальный лейбл. Помогаем артистам делиться музыкой со
               всем миром.
             </p>
+            {/* Social links */}
+            <div className="mt-6 flex gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/50 transition-all duration-300 hover:bg-[#7c3aed] hover:text-white"
+                  aria-label={social.label}
+                >
+                  <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d={social.icon} />
+                  </svg>
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
+            <h4 className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-white/30">
               Продукт
             </h4>
             <ul className="space-y-2.5">
@@ -50,7 +70,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
+                    className="text-[14px] text-white/50 transition-colors duration-200 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -61,7 +81,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
+            <h4 className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-white/30">
               Компания
             </h4>
             <ul className="space-y-2.5">
@@ -69,7 +89,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
+                    className="text-[14px] text-white/50 transition-colors duration-200 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -80,7 +100,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
+            <h4 className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-white/30">
               Документы
             </h4>
             <ul className="space-y-2.5">
@@ -88,7 +108,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
+                    className="text-[14px] text-white/50 transition-colors duration-200 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -98,8 +118,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-black/[0.06]">
-          <p className="pt-6 text-center text-[13px] text-[#94a3b8]">
+        <div className="mt-14 border-t border-white/10">
+          <p className="pt-6 text-center text-[13px] text-white/30">
             &copy; {new Date().getFullYear()} Future Label. Все права защищены.
           </p>
         </div>
