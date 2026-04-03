@@ -31,7 +31,7 @@ import { Route as AdminAdminOrdersRouteImport } from './routes/_admin/admin/orde
 import { Route as AdminAdminArtistsRouteImport } from './routes/_admin/admin/artists'
 import { Route as AuthenticatedDashboardReleasesNewRouteImport } from './routes/_authenticated/dashboard/releases/new'
 import { Route as AuthenticatedDashboardReleasesKeyRouteImport } from './routes/_authenticated/dashboard/releases/$key'
-import { Route as AdminAdminReleasesKeyRouteImport } from './routes/_admin/admin/releases.$key'
+import { Route as AdminAdminReleasesKeyRouteImport } from './routes/_admin/admin/releases_.$key'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -146,9 +146,9 @@ const AuthenticatedDashboardReleasesKeyRoute =
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AdminAdminReleasesKeyRoute = AdminAdminReleasesKeyRouteImport.update({
-  id: '/$key',
-  path: '/$key',
-  getParentRoute: () => AdminAdminReleasesRoute,
+  id: '/releases_/$key',
+  path: '/releases/$key',
+  getParentRoute: () => AdminAdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -163,7 +163,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PublicPricingRoute
   '/admin/artists': typeof AdminAdminArtistsRoute
   '/admin/orders': typeof AdminAdminOrdersRoute
-  '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/admin/releases': typeof AdminAdminReleasesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -183,7 +183,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PublicPricingRoute
   '/admin/artists': typeof AdminAdminArtistsRoute
   '/admin/orders': typeof AdminAdminOrdersRoute
-  '/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/admin/releases': typeof AdminAdminReleasesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -209,13 +209,13 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_admin/admin/artists': typeof AdminAdminArtistsRoute
   '/_admin/admin/orders': typeof AdminAdminOrdersRoute
-  '/_admin/admin/releases': typeof AdminAdminReleasesRouteWithChildren
+  '/_admin/admin/releases': typeof AdminAdminReleasesRoute
   '/_admin/admin/services': typeof AdminAdminServicesRoute
   '/_authenticated/dashboard/contracts': typeof AuthenticatedDashboardContractsRoute
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
-  '/_admin/admin/releases/$key': typeof AdminAdminReleasesKeyRoute
+  '/_admin/admin/releases_/$key': typeof AdminAdminReleasesKeyRoute
   '/_authenticated/dashboard/releases/$key': typeof AuthenticatedDashboardReleasesKeyRoute
   '/_authenticated/dashboard/releases/new': typeof AuthenticatedDashboardReleasesNewRoute
 }
@@ -284,7 +284,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/notifications'
     | '/_admin/admin/'
     | '/_authenticated/dashboard/'
-    | '/_admin/admin/releases/$key'
+    | '/_admin/admin/releases_/$key'
     | '/_authenticated/dashboard/releases/$key'
     | '/_authenticated/dashboard/releases/new'
   fileRoutesById: FileRoutesById
@@ -455,41 +455,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardReleasesKeyRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_admin/admin/releases/$key': {
-      id: '/_admin/admin/releases/$key'
-      path: '/$key'
+    '/_admin/admin/releases_/$key': {
+      id: '/_admin/admin/releases_/$key'
+      path: '/releases/$key'
       fullPath: '/admin/releases/$key'
       preLoaderRoute: typeof AdminAdminReleasesKeyRouteImport
-      parentRoute: typeof AdminAdminReleasesRoute
+      parentRoute: typeof AdminAdminRoute
     }
   }
 }
 
-interface AdminAdminReleasesRouteChildren {
-  AdminAdminReleasesKeyRoute: typeof AdminAdminReleasesKeyRoute
-}
-
-const AdminAdminReleasesRouteChildren: AdminAdminReleasesRouteChildren = {
-  AdminAdminReleasesKeyRoute: AdminAdminReleasesKeyRoute,
-}
-
-const AdminAdminReleasesRouteWithChildren =
-  AdminAdminReleasesRoute._addFileChildren(AdminAdminReleasesRouteChildren)
-
 interface AdminAdminRouteChildren {
   AdminAdminArtistsRoute: typeof AdminAdminArtistsRoute
   AdminAdminOrdersRoute: typeof AdminAdminOrdersRoute
-  AdminAdminReleasesRoute: typeof AdminAdminReleasesRouteWithChildren
+  AdminAdminReleasesRoute: typeof AdminAdminReleasesRoute
   AdminAdminServicesRoute: typeof AdminAdminServicesRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+  AdminAdminReleasesKeyRoute: typeof AdminAdminReleasesKeyRoute
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
   AdminAdminArtistsRoute: AdminAdminArtistsRoute,
   AdminAdminOrdersRoute: AdminAdminOrdersRoute,
-  AdminAdminReleasesRoute: AdminAdminReleasesRouteWithChildren,
+  AdminAdminReleasesRoute: AdminAdminReleasesRoute,
   AdminAdminServicesRoute: AdminAdminServicesRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
+  AdminAdminReleasesKeyRoute: AdminAdminReleasesKeyRoute,
 }
 
 const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(

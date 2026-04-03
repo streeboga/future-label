@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ShoppingCart } from 'lucide-react';
-import type { Order } from '@/types/admin';
+
 
 export const Route = createFileRoute('/_admin/admin/orders')({
   component: AdminOrders,

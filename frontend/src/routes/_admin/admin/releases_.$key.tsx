@@ -27,7 +27,7 @@ import {
   Loader2,
 } from 'lucide-react';
 
-export const Route = createFileRoute('/_admin/admin/releases/$key')({
+export const Route = createFileRoute('/_admin/admin/releases_/$key')({
   component: AdminReleaseDetail,
 });
 
