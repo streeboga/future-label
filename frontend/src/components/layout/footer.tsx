@@ -21,27 +21,28 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer style={{ borderTop: '0.5px solid #e5e5e3', backgroundColor: '#fafaf9' }}>
-      <div className="mx-auto max-w-[1120px] px-6 pb-10 pt-16">
+    <footer className="border-t border-black/[0.06] bg-[#f8f9fa]">
+      <div className="mx-auto max-w-[1200px] px-6 pb-10 pt-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-0.5 text-[17px] font-semibold tracking-[-0.02em]">
-              <span className="text-[#1a1a1a]">Future</span>
-              <span
-                className="mx-[3px] inline-block h-[7px] w-[7px] rounded-full"
-                style={{ backgroundColor: '#185FA5' }}
-              />
-              <span className="text-[#1a1a1a]">Label</span>
+            <Link
+              to="/"
+              className="flex items-center gap-0.5 text-[16px] font-semibold tracking-[-0.02em] text-[#0f172a]"
+            >
+              Future
+              <span className="mx-[3px] inline-block h-[6px] w-[6px] rounded-full bg-[#2563eb]" />
+              Label
             </Link>
-            <p className="mt-4 max-w-[240px] text-[13px] leading-[1.6] text-[#999]">
-              Христианский музыкальный лейбл. Помогаем артистам делиться музыкой со всем миром.
+            <p className="mt-4 max-w-[240px] text-[13px] leading-[1.7] text-[#94a3b8]">
+              Христианский музыкальный лейбл. Помогаем артистам делиться музыкой со
+              всем миром.
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
               Продукт
             </h4>
             <ul className="space-y-2.5">
@@ -49,7 +50,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
+                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
                   >
                     {link.label}
                   </Link>
@@ -60,7 +61,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
               Компания
             </h4>
             <ul className="space-y-2.5">
@@ -68,7 +69,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
+                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
                   >
                     {link.label}
                   </Link>
@@ -79,7 +80,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#999]">
+            <h4 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#94a3b8]">
               Документы
             </h4>
             <ul className="space-y-2.5">
@@ -87,7 +88,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-[14px] text-[#6b6b6b] transition-colors duration-200 hover:text-[#1a1a1a]"
+                    className="text-[14px] text-[#64748b] transition-colors duration-200 hover:text-[#0f172a]"
                   >
                     {link.label}
                   </Link>
@@ -97,8 +98,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14" style={{ borderTop: '0.5px solid #e5e5e3' }}>
-          <p className="pt-6 text-center text-[13px] text-[#999]">
+        <div className="mt-14 border-t border-black/[0.06]">
+          <p className="pt-6 text-center text-[13px] text-[#94a3b8]">
             &copy; {new Date().getFullYear()} Future Label. Все права защищены.
           </p>
         </div>

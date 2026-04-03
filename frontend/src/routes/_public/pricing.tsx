@@ -22,29 +22,29 @@ function PricingPage() {
       <Pricing detailed />
 
       {/* Comparison table */}
-      <section className="px-4 py-20 sm:px-6 sm:py-24">
+      <section className="bg-[#f8f9fa] px-6 py-16 md:py-[120px]">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-center text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="mb-12 text-center text-[28px] font-semibold tracking-[-0.02em] text-[#0f172a] md:text-[40px]">
             Сравнение тарифов
           </h2>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl bg-white p-6 shadow-sm">
+            <table className="w-full text-[14px]">
               <thead>
-                <tr className="border-b">
-                  <th className="pb-4 text-left font-medium text-muted-foreground">Функция</th>
-                  <th className="pb-4 text-center font-medium">Бесплатно</th>
-                  <th className="pb-4 text-center font-medium text-primary">Стандарт</th>
-                  <th className="pb-4 text-center font-medium">Премиум</th>
+                <tr className="border-b border-black/[0.06]">
+                  <th className="pb-4 text-left font-medium text-[#94a3b8]">Функция</th>
+                  <th className="pb-4 text-center font-medium text-[#0f172a]">Бесплатно</th>
+                  <th className="pb-4 text-center font-medium text-[#2563eb]">Стандарт</th>
+                  <th className="pb-4 text-center font-medium text-[#0f172a]">Премиум</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-black/[0.06]">
                 {comparisonRows.map((row) => (
                   <tr key={row.feature}>
-                    <td className="py-3 pr-4 text-muted-foreground">{row.feature}</td>
-                    <td className="py-3 text-center">{row.free}</td>
-                    <td className="py-3 text-center">{row.standard}</td>
-                    <td className="py-3 text-center">{row.premium}</td>
+                    <td className="py-3 pr-4 text-[#64748b]">{row.feature}</td>
+                    <td className="py-3 text-center text-[#0f172a]">{row.free}</td>
+                    <td className="py-3 text-center text-[#0f172a]">{row.standard}</td>
+                    <td className="py-3 text-center text-[#0f172a]">{row.premium}</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,5 +1,4 @@
 import { Globe, ListMusic, Megaphone, TrendingUp } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 
 const services = [
   {
@@ -30,13 +29,13 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="px-4 py-20 sm:px-6 sm:py-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+    <section id="services" className="bg-[#f8f9fa] px-6 py-16 md:py-[120px]">
+      <div className="mx-auto max-w-[1200px]">
+        <div className="mb-16 text-center">
+          <h2 className="text-[28px] font-semibold tracking-[-0.02em] text-[#0f172a] md:text-[40px]">
             Наши услуги
           </h2>
-          <p className="mt-3 text-lg text-muted-foreground">
+          <p className="mt-4 text-[18px] leading-[1.7] text-[#64748b]">
             Все, что нужно для успешного релиза
           </p>
         </div>
@@ -45,22 +44,20 @@ export function Services() {
           {services.map((service) => {
             const Icon = service.icon
             return (
-              <Card
+              <div
                 key={service.title}
-                className="group border-border/60 transition-all hover:border-primary/20 hover:shadow-md"
+                className="group rounded-2xl bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
-                <CardContent className="flex gap-4 pt-6">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
-                    <Icon className="size-5" />
-                  </div>
-                  <div>
-                    <h3 className="mb-1 font-semibold">{service.title}</h3>
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {service.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#eff6ff] text-[#2563eb]">
+                  <Icon className="size-5" />
+                </div>
+                <h3 className="mb-2 text-[16px] font-semibold text-[#0f172a]">
+                  {service.title}
+                </h3>
+                <p className="text-[14px] leading-[1.7] text-[#64748b]">
+                  {service.description}
+                </p>
+              </div>
             )
           })}
         </div>
