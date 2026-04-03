@@ -45,6 +45,8 @@ final class ReleaseResource extends JsonApiResource
     {
         return [
             'tracks' => fn () => TrackResource::collection($this->whenLoaded('tracks')),
+            'user' => fn () => UserResource::make($this->whenLoaded('user')),
+            'contracts' => fn () => ContractResource::collection($this->whenLoaded('contracts')),
         ];
     }
 

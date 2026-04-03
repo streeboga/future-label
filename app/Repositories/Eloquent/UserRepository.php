@@ -7,6 +7,7 @@ namespace App\Repositories\Eloquent;
 use App\Builders\UserQueryBuilder;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class UserRepository implements UserRepositoryInterface
@@ -57,5 +58,25 @@ final class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return $user->refresh();
+    }
+
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, User>
+     */
+    public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $builder = UserQueryBuilder::make();
+
+        if (isset($filters['search']) && is_string($filters['search'])) {
+            $builder->search($filters['search']);
+        }
+
+        return $builder->getQuery()->latest()->paginate($perPage);
+    }
+
+    public function count(): int
+    {
+        return User::count();
     }
 }

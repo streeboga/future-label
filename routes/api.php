@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\AdminDashboardController;
 use App\Http\Controllers\Api\V1\AdminPaymentController;
+use App\Http\Controllers\Api\V1\AdminReleaseController;
+use App\Http\Controllers\Api\V1\AdminUserController;
 use App\Http\Controllers\Api\V1\ContractController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\LoginController;
@@ -20,7 +23,6 @@ use App\Http\Controllers\Api\V1\ServiceCatalogController;
 use App\Http\Controllers\Api\V1\TrackController;
 use App\Http\Controllers\Api\V1\VerifyEmailController;
 use App\Http\Middleware\EnsureUserHasAdminAccess;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -89,14 +91,16 @@ Route::prefix('v1')->group(function (): void {
 
         // Admin panel routes (admin + manager only)
         Route::prefix('admin')->middleware(EnsureUserHasAdminAccess::class)->group(function (): void {
-            Route::get('dashboard', fn (): JsonResponse => response()->json([
-                'data' => [
-                    'type' => 'dashboard',
-                    'attributes' => [
-                        'message' => 'Admin dashboard',
-                    ],
-                ],
-            ]))->name('admin.dashboard');
+            Route::get('dashboard', AdminDashboardController::class)->name('admin.dashboard');
+
+            // Release management (admin + manager)
+            Route::get('releases', [AdminReleaseController::class, 'index'])->name('admin.releases.index');
+            Route::get('releases/{release}', [AdminReleaseController::class, 'show'])->name('admin.releases.show');
+            Route::patch('releases/{release}/status', [AdminReleaseController::class, 'updateStatus'])->name('admin.releases.status');
+
+            // User management (admin + manager)
+            Route::get('users', [AdminUserController::class, 'index'])->name('admin.users.index');
+            Route::get('users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
 
             // Payment management (admin + manager)
             Route::patch('payments/{payment}/confirm', [AdminPaymentController::class, 'confirm'])->name('admin.payments.confirm');

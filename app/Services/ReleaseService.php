@@ -91,6 +91,52 @@ final readonly class ReleaseService
         return $this->repository->paginate($filters, $perPage);
     }
 
+    public function approve(Release $release): Release
+    {
+        if ($release->status !== ReleaseStatus::InReview) {
+            throw ValidationException::withMessages([
+                'status' => ['Release can only be approved from in_review status.'],
+            ]);
+        }
+
+        /** @var Release */
+        return DB::transaction(fn (): Release => $this->repository->updateStatus($release, ReleaseStatus::Approved));
+    }
+
+    public function reject(Release $release, string $reason): Release
+    {
+        if ($release->status !== ReleaseStatus::InReview) {
+            throw ValidationException::withMessages([
+                'status' => ['Release can only be rejected from in_review status.'],
+            ]);
+        }
+
+        /** @var Release */
+        return DB::transaction(function () use ($release, $reason): Release {
+            $release->reject_reason = $reason;
+            $release->save();
+
+            return $this->repository->updateStatus($release, ReleaseStatus::Rejected);
+        });
+    }
+
+    public function publish(Release $release): Release
+    {
+        if ($release->status !== ReleaseStatus::Approved) {
+            throw ValidationException::withMessages([
+                'status' => ['Release can only be published from approved status.'],
+            ]);
+        }
+
+        /** @var Release */
+        return DB::transaction(function () use ($release): Release {
+            $release->published_at = now();
+            $release->save();
+
+            return $this->repository->updateStatus($release, ReleaseStatus::Published);
+        });
+    }
+
     public function submit(Release $release): Release
     {
         if ($release->status !== ReleaseStatus::Draft && $release->status !== ReleaseStatus::Rejected) {

@@ -44,7 +44,9 @@ final class UserResource extends JsonApiResource
      */
     public function toRelationships(Request $request): array
     {
-        return [];
+        return [
+            'releases' => fn () => ReleaseResource::collection($this->whenLoaded('releases')),
+        ];
     }
 
     public function toId(Request $request): string

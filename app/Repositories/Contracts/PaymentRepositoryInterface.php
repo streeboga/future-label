@@ -31,4 +31,6 @@ interface PaymentRepositoryInterface
     public function updateStatus(Payment $payment, PaymentStatus $status): Payment;
 
     public function findByProviderPaymentId(string $providerPaymentId): ?Payment;
+
+    public function sumConfirmedAmount(): string;
 }

@@ -12,6 +12,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;
 
@@ -50,6 +51,25 @@ final readonly class UserService
         event(new UserRegistered($result['user']));
 
         return $result;
+    }
+
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, User>
+     */
+    public function listAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->paginate($filters, $perPage);
+    }
+
+    public function findByKey(string $key): User
+    {
+        return $this->repository->findByKey($key);
+    }
+
+    public function count(): int
+    {
+        return $this->repository->count();
     }
 
     public function updateProfile(User $user, UpdateProfileData $data, ?string $ipAddress = null): User

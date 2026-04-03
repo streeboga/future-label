@@ -39,4 +39,8 @@ interface ReleaseRepositoryInterface
     public function updateStatus(Release $release, ReleaseStatus $status): Release;
 
     public function countTracksForRelease(int $releaseId): int;
+
+    public function countByStatus(ReleaseStatus $status): int;
+
+    public function countCreatedThisMonth(): int;
 }

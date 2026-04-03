@@ -85,6 +85,13 @@ final class PaymentRepository implements PaymentRepositoryInterface
             ->first();
     }
 
+    public function sumConfirmedAmount(): string
+    {
+        $sum = Payment::where('status', PaymentStatus::Confirmed->value)->sum('amount');
+
+        return number_format((float) $sum, 2, '.', '');
+    }
+
     /**
      * @param  array<string, mixed>  $filters
      */

@@ -100,6 +100,19 @@ final class ReleaseRepository implements ReleaseRepositoryInterface
         return $release->tracks_count;
     }
 
+    public function countByStatus(ReleaseStatus $status): int
+    {
+        return ReleaseQueryBuilder::make()
+            ->withStatus($status)
+            ->getQuery()
+            ->count();
+    }
+
+    public function countCreatedThisMonth(): int
+    {
+        return Release::where('created_at', '>=', now()->startOfMonth())->count();
+    }
+
     /**
      * @param  array<string, mixed>  $filters
      */
@@ -111,6 +124,10 @@ final class ReleaseRepository implements ReleaseRepositoryInterface
 
         if (isset($filters['search']) && is_string($filters['search'])) {
             $builder->search($filters['search']);
+        }
+
+        if (isset($filters['user_id']) && is_int($filters['user_id'])) {
+            $builder->byUserId($filters['user_id']);
         }
     }
 }
